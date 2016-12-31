@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e56fcbe8-0d5c-43fa-8e25-8e8a3ef420ec" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.scss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/list/list.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/list/list.scss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/list/list.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.html" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.scss" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.scss" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.ts" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hatulia-application/src/pages/list/list.ts" afterPath="$PROJECT_DIR$/hatulia-application/src/pages/list/list.ts" />
     </list>
     <ignored path="hatulia-app.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,41 +41,21 @@
       <file leaf-file-name="list.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/list/list.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="28" column="3" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
-              <folding>
-                <element signature="e#49#89#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="item-details.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="16" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="16" />
+            <state relative-caret-position="30">
+              <caret line="4" column="41" selection-start-line="4" selection-start-column="41" selection-end-line="4" selection-end-column="41" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="item-details.ts" pinned="false" current-in-tab="false">
+      <file leaf-file-name="item-details.ts" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="item-details.scss" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.scss">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="270">
+              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+              <folding>
+                <element signature="e#49#91#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -105,9 +82,10 @@
         <option value="$PROJECT_DIR$/hatulia-application/www/js/app.js" />
         <option value="$PROJECT_DIR$/hatulia-application/www/index.html" />
         <option value="$PROJECT_DIR$/hatulia-application/src/pages/list/list.html" />
-        <option value="$PROJECT_DIR$/hatulia-application/src/pages/list/list.ts" />
         <option value="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.html" />
+        <option value="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.scss" />
         <option value="$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.ts" />
+        <option value="$PROJECT_DIR$/hatulia-application/src/pages/list/list.ts" />
       </list>
     </option>
   </component>
@@ -374,12 +352,12 @@
       <option name="presentableId" value="Default" />
       <updated>1483107168884</updated>
       <workItem from="1483107170837" duration="1879000" />
-      <workItem from="1483176391073" duration="2802000" />
+      <workItem from="1483176391073" duration="3065000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4681000" />
+    <option name="totallyTimeSpent" value="4944000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="807" extended-state="6" />
@@ -605,37 +583,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/list/list.ts">
+    <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="28" column="3" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
-          <folding>
-            <element signature="e#49#89#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="30">
+          <caret line="2" column="1" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="16" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="16" />
+        <state relative-caret-position="255">
+          <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/list/list.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="4" column="41" selection-start-line="4" selection-start-column="41" selection-end-line="4" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hatulia-application/src/pages/item-details/item-details.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="270">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding>
+            <element signature="e#49#91#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -3,6 +3,7 @@
  */
 import {Component} from "@angular/core";
 import {NavController, NavParams} from 'ionic-angular';
+import {ItemDetailsPage} from "../item-details/item-details";
 
 @Component({
   templateUrl: 'build/pages/list/list.html'
@@ -29,6 +30,8 @@ export class ListPage {
   }
 
   itemTapped(event, item) {
-    console.log('tapped on ' + item);
+    this.navCtrl.push(ItemDetailsPage, {
+      item: item
+    });
   }
 }
