@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { AuthService } from '../../providers/auth-service';
 import { RegisterPage } from '../register/register';
-import { HelloIonicPage } from '../hello-ionic/hello-ionic';
+import { HomePage } from '../home/home';
 
 /*
   Generated class for the Login page.
@@ -33,8 +33,8 @@ export class LoginPage {
           this.nav.setRoot(HelloIonicPage);
         });
       } else {
-        this.showError('Access denied')
-        this.nav.setRoot(HelloIonicPage);
+        this.showError('Access denied');
+        this.nav.setRoot(HomePage);
       }
     },
     error => {
