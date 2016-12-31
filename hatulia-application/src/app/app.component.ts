@@ -1,9 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+
+import { Platform, MenuController, Nav } from 'ionic-angular';
+
 import { StatusBar, Splashscreen } from 'ionic-native';
 
-import { Page1 } from '../pages/page1/page1';
-import { Page2 } from '../pages/page2/page2';
+import { HomePage } from '../pages/home/home';
+import { ListPage } from '../pages/list/list';
+import { LoginPage } from '../pages/login/login';
 
 
 @Component({
@@ -12,19 +15,21 @@ import { Page2 } from '../pages/page2/page2';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = Page1;
-
+  // make HelloIonicPage the root (or first) page
+  rootPage: any = LoginPage;
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform) {
+  constructor(
+    public platform: Platform,
+    public menu: MenuController
+  ) {
     this.initializeApp();
 
-    // used for an example of ngFor and navigation
+    // set our app's pages
     this.pages = [
-      { title: 'Page One', component: Page1 },
-      { title: 'Page Two', component: Page2 }
+      { title: 'Home Page', component: HomePage },
+      { title: 'My First List', component: ListPage }
     ];
-
   }
 
   initializeApp() {
@@ -37,8 +42,9 @@ export class MyApp {
   }
 
   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
+    // close the menu when clicking a link from the menu
+    this.menu.close();
+    // navigate to the new page if it is not the current page
     this.nav.setRoot(page.component);
   }
 }
