@@ -6,22 +6,15 @@ var morgan = require('morgan');
 var mongoose = restful.mongoose;
 var cors = require('cors');
 
-
-
-
 var app = express();
 
 // <<-- Midelewares -->>
 var root = __dirname.replace("server", "");
 console.log(root);
 
-
-
 app.use(cors());
 app.use(morgan('dev'));
 app.use(methodOverride());
-
-
 
 
 app.use(bodyparser.urlencoded({'extended': 'true'}));
@@ -29,12 +22,8 @@ app.use(bodyparser.json());
 app.use(bodyparser.json({type: 'application/vnd.api+json'}));
 
 
-
-
-
 // <<-- DB -->>
 mongoose.connect('mongodb://localhost/hatuliaDB');
-
 
 
 // Define schema
@@ -60,11 +49,9 @@ orders.register(app, '/api/orders');
 var ordersModel = mongoose.model('orders',orderSchema);
 
 
-
-
-
-
-
+app.get('/wines', function(req, res) {
+  res.send([{name:'wine1'}, {name:'wine2'}]);
+});
 
 
 // catch 404 and forward to error handler

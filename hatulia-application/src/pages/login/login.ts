@@ -30,11 +30,10 @@ export class LoginPage {
       if (allowed) {
         setTimeout(() => {
           this.loading.dismiss();
-          this.nav.setRoot(HelloIonicPage);
+          this.nav.setRoot(HomePage);
         });
       } else {
         this.showError('Access denied');
-        this.nav.setRoot(HomePage);
       }
     },
     error => {
