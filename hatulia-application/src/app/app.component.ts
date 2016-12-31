@@ -20,16 +20,16 @@ export class MyApp {
   pages: Array<{title: string, component: any}>;
 
   constructor(
-    public platform: Platform
-    // public menu: MenuController
+    public platform: Platform,
+    public menu: MenuController
   ) {
     this.initializeApp();
 
     // set our app's pages
-    // this.pages = [
-    //   { title: 'Hello Ionic', component: HelloIonicPage },
-    //   { title: 'My First List', component: ListPage }
-    // ];
+    this.pages = [
+      { title: 'Hello Ionic', component: HelloIonicPage },
+      { title: 'My First List', component: ListPage }
+    ];
   }
 
   initializeApp() {
@@ -41,10 +41,10 @@ export class MyApp {
     });
   }
 
-  // openPage(page) {
-  //   // close the menu when clicking a link from the menu
-  //   this.menu.close();
-  //   // navigate to the new page if it is not the current page
-  //   this.nav.setRoot(page.component);
-  // }
+  openPage(page) {
+    // close the menu when clicking a link from the menu
+    this.menu.close();
+    // navigate to the new page if it is not the current page
+    this.nav.setRoot(page.component);
+  }
 }

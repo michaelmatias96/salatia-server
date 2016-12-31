@@ -33,7 +33,8 @@ export class LoginPage {
           this.nav.setRoot(HelloIonicPage);
         });
       } else {
-          this.showError('Access denied')
+        this.showError('Access denied')
+        this.nav.setRoot(HelloIonicPage);
       }
     },
     error => {
