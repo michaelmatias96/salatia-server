@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 import {Observable} from "rxjs/Observable";
 
@@ -23,17 +23,36 @@ export class User {
 @Injectable()
 export class AuthService {
   currentUser: User;
+  private authenticationUrl = 'http://localhost:8080/auth';
+
+  constructor (private http: Http) {}
+
+  isUserAuthenticated(credentials) {
+    return this.http.get(this.authenticationUrl + '/login', credentials)
+      .map(response => response.json());
+  }
+
+  loginLogic(data) {
+    this.currentUser = new User(data.data.name, data.data.email);
+  }
 
   public login(credentials) {
     if (credentials.email === null || credentials.password === null) {
       return Observable.throw("Please insert credentials");
     } else {
       return Observable.create(observer => {
-        // At this point make a request to your backend to make a real check!
-        let access = (credentials.password === "pass" && credentials.email === "email");
-        this.currentUser = new User('Simon', 'saimon@devdactic.com');
-        observer.next(access);
-        observer.complete();
+        this.isUserAuthenticated(credentials)
+          .subscribe(data => {
+            this.currentUser = new User(data.data.name, data.data.email);
+            let access = (data.success == true);
+            observer.next(access);
+            observer.complete();
+          }, error => {
+            console.error('Error');
+          }, () => {
+            console.log('Completed!');
+          });
+
       });
     }
   }
