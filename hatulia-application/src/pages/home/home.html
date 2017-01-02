@@ -12,7 +12,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content class="home" padding>
-  <h3>Welcome inside, {{username}}!</h3>
-  Your Email is: {{email}}
+<ion-content class="home" padding *ngIf="auth.user">
+  <h3>Welcome inside, {{auth.user.name}}!</h3>
+  Your Email is: {{auth.user.email}}
 </ion-content>

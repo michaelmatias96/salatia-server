@@ -3,8 +3,7 @@
 import { Storage } from '@ionic/storage';
 import { AuthHttp, JwtHelper, tokenNotExpired } from 'angular2-jwt';
 import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { Auth0Vars } from '../../auth0-variables';
+import {Observable} from 'rxjs/Rx';
 
 // Avoid name not found warnings
 declare var Auth0: any;
@@ -65,7 +64,6 @@ export class AuthService {
       this.zoneImpl.run(() => this.user = authResult.profile);
       // Schedule a token refresh
       this.scheduleRefresh();
-
     });
   }
 
@@ -162,6 +160,5 @@ export class AuthService {
     }).catch(error => {
       console.log(error);
     });
-
   }
 }
