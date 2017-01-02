@@ -53,6 +53,15 @@ app.get('/wines', function(req, res) {
   res.send([{name:'wine1'}, {name:'wine2'}]);
 });
 
+app.get('/auth/login', function(req, res) {
+    res.send({
+        success: true,
+        data: {
+          name: "Michael Matias",
+          email: "michael@michaelmatias.com"
+        }
+    });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
