@@ -4,9 +4,20 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ItemDetailsPage } from '../pages/item-details/item-details';
 import { ListPage } from '../pages/list/list';
-import { LoginPage } from '../pages/login/login';
+import { ProfilePage } from '../pages/profile/profile';
+import { AuthConfig, AuthHttp } from 'angular2-jwt';
 import { AuthService } from '../providers/auth-service.ts';
-import { RegisterPage } from '../pages/register/register';
+import { HttpModule } from '@angular/http';
+import { Storage } from '@ionic/storage';
+
+let storage: Storage = new Storage();
+
+export function getAuthHttp(http) {
+  return new AuthHttp(new AuthConfig({
+    globalHeaders: [{'Accept': 'application/json'}],
+    tokenGetter: (() => storage.get('id_token'))
+  }), http);
+}
 
 @NgModule({
   declarations: [
@@ -14,11 +25,11 @@ import { RegisterPage } from '../pages/register/register';
     HomePage,
     ItemDetailsPage,
     ListPage,
-    LoginPage,
-    RegisterPage
+    ProfilePage
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    HttpModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -26,9 +37,16 @@ import { RegisterPage } from '../pages/register/register';
     HomePage,
     ItemDetailsPage,
     ListPage,
-    LoginPage,
-    RegisterPage
+    ProfilePage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, AuthService]
+  providers: [
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    AuthService,
+    {
+      provide: AuthHttp,
+      useFactory: getAuthHttp,
+      deps: [HttpModule]
+    }
+  ]
 })
 export class AppModule {}
