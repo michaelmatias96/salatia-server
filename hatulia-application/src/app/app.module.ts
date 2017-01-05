@@ -5,6 +5,9 @@ import { HomePage } from '../pages/home/home';
 import { ItemDetailsPage } from '../pages/item-details/item-details';
 import { ListPage } from '../pages/list/list';
 import { ProfilePage } from '../pages/profile/profile';
+import { CreateOrderPage } from '../pages/create-order/create-order';
+import { CreateOrderExtrasPage } from '../pages/create-order-extras/create-order-extras';
+import { ChooseMeatPage } from '../pages/choose-meat/choose-meat';
 import { AuthConfig, AuthHttp } from 'angular2-jwt';
 import { AuthService } from '../providers/auth-service.ts';
 import { HttpModule } from '@angular/http';
@@ -25,7 +28,10 @@ export function getAuthHttp(http) {
     HomePage,
     ItemDetailsPage,
     ListPage,
-    ProfilePage
+    ProfilePage,
+    CreateOrderPage,
+    CreateOrderExtrasPage,
+    ChooseMeatPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -37,7 +43,10 @@ export function getAuthHttp(http) {
     HomePage,
     ItemDetailsPage,
     ListPage,
-    ProfilePage
+    ProfilePage,
+    CreateOrderPage,
+    CreateOrderExtrasPage,
+    ChooseMeatPage
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},

@@ -1,0 +1,36 @@
+<!--
+  Generated template for the CreateOrder page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Create Order</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="logout()">
+        <ion-icon name="log-out"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding *ngIf="auth.user" class="card-background-page">
+  <ion-card (click)="order('baget')">
+    <img src="../../assets/img/card-saopaolo.png"/>
+    <div class="card-title">Baget</div>
+    <div class="card-subtitle">20NIS</div>
+  </ion-card>
+
+  <ion-card (click)="order('salad')">
+    <img src="../../assets/img/card-amsterdam.png"/>
+    <div class="card-title">Salad</div>
+    <div class="card-subtitle">23NIS</div>
+  </ion-card>
+</ion-content>
