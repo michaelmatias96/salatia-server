@@ -22,15 +22,9 @@
 
 
 <ion-content padding *ngIf="auth.user" class="card-background-page">
-  <ion-card (click)="order('baget')">
-    <img src="../../assets/img/card-saopaolo.png"/>
-    <div class="card-title">Baget</div>
-    <div class="card-subtitle">20NIS</div>
-  </ion-card>
-
-  <ion-card (click)="order('salad')">
-    <img src="../../assets/img/card-amsterdam.png"/>
-    <div class="card-title">Salad</div>
-    <div class="card-subtitle">23NIS</div>
+  <ion-card *ngFor="let meal of mealDetails | values:'key':true" (click)="continue(meal.id)">
+    <img src="{{meal.imgUrl}}"/>
+    <div class="card-title">{{meal.displayName}}</div>
+    <div class="card-subtitle">{{meal.price}}</div>
   </ion-card>
 </ion-content>

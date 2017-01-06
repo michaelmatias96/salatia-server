@@ -7,14 +7,33 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>create-order-extras</ion-title>
+    <ion-title>Choose Extras</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <h1>{{type}}</h1>
+  <ion-list>
+    <ion-item *ngFor="let extra of extrasDetails | values:'key':true">
+      <ion-avatar>
+        <img src="{{extra.imgUrl}}"/>
+      </ion-avatar>
+      <ion-label>{{extra.displayName}}</ion-label>
+      <ion-toggle checked="false"></ion-toggle>
+    </ion-item>
+  </ion-list>
+
+  <ion-chip *ngFor="let extra of extrasDetails | values:'key':true">
+    <ion-avatar>
+      <img src="{{extra.imgUrl}}">
+    </ion-avatar>
+    <ion-label>{{extra.displayName}}</ion-label>
+    <button ion-button clear color="dark" (click)="delete(extra.id)">
+      <ion-icon name="close-circle"></ion-icon>
+    </button>
+  </ion-chip>
+
   <button ion-button color="secondary" (click)="submitExtras()">
     Next
   </button>

@@ -14,5 +14,8 @@
 
 
 <ion-content padding>
-
+  <ion-card *ngFor="let meat of meatDetails | values:'key':true" (click)="chooseMeat(meat.id)">
+    <img src="{{meat.imgUrl}}"/>
+  </ion-card>
+  <button ion-button (click)="continue()">Next</button>
 </ion-content>

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import {NavController, NavParams, LoadingController} from 'ionic-angular';
+import {OrderService} from "../../providers/order-service";
+import {SubmitOrderPage} from "../submit-order/submit-order";
 
 /*
   Generated class for the ChooseMeat page.
@@ -12,11 +14,32 @@ import { NavController, NavParams } from 'ionic-angular';
   templateUrl: 'choose-meat.html'
 })
 export class ChooseMeatPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  meatDetails: Object;
+  chosenMeat: String;
+  constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, private orderService: OrderService) {
+    this.meatDetails = orderService.meatDetails;
+    this.chosenMeat = "";
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChooseMeatPage');
   }
 
+  continue() {
+    this.presentLoading();
+    this.orderService.setExtras(this.chosenMeat);
+    this.navCtrl.push(SubmitOrderPage);
+  }
+
+  chooseMeat(meatId) {
+    this.chosenMeat = meatId;
+  }
+
+  presentLoading() {
+    let loader = this.loadingCtrl.create({
+      content: "Loading meat types...",
+      duration: 500
+    });
+    loader.present();
+  }
 }

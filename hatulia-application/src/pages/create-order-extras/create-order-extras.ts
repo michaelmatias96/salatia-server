@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import {ChooseMeatPage} from "../choose-meat/choose-meat";
+import { OrderService } from '../../providers/order-service';
+import { LoadingController } from 'ionic-angular';
+
 
 /*
   Generated class for the CreateOrderExtras page.
@@ -13,10 +16,11 @@ import {ChooseMeatPage} from "../choose-meat/choose-meat";
   templateUrl: 'create-order-extras.html'
 })
 export class CreateOrderExtrasPage {
-  type: String;
+  extrasDetails: Object;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.type = navParams.data.type;
+  constructor(public navCtrl: NavController, private orderService: OrderService, private loadingCtrl: LoadingController) {
+    console.log(orderService);
+    this.extrasDetails = orderService.extrasDetails;
   }
 
   ionViewDidLoad() {
@@ -24,7 +28,17 @@ export class CreateOrderExtrasPage {
   }
 
   public submitExtras() {
-    this.navCtrl.push(ChooseMeatPage, {});
+    this.presentLoading();
+    this.orderService.setExtras({});
+    this.navCtrl.push(ChooseMeatPage);
+  }
+
+  presentLoading() {
+    let loader = this.loadingCtrl.create({
+      content: "Loading meat types...",
+      duration: 500
+    });
+    loader.present();
   }
 
 }

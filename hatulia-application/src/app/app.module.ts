@@ -10,8 +10,11 @@ import { CreateOrderExtrasPage } from '../pages/create-order-extras/create-order
 import { ChooseMeatPage } from '../pages/choose-meat/choose-meat';
 import { AuthConfig, AuthHttp } from 'angular2-jwt';
 import { AuthService } from '../providers/auth-service.ts';
+import { OrderService } from '../providers/order-service';
 import { HttpModule } from '@angular/http';
 import { Storage } from '@ionic/storage';
+import {SubmitOrderPage} from "../pages/submit-order/submit-order";
+import {ValuesPipe} from "../pipes/pipe";
 
 let storage: Storage = new Storage();
 
@@ -31,7 +34,9 @@ export function getAuthHttp(http) {
     ProfilePage,
     CreateOrderPage,
     CreateOrderExtrasPage,
-    ChooseMeatPage
+    ChooseMeatPage,
+    SubmitOrderPage,
+    ValuesPipe
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -46,7 +51,8 @@ export function getAuthHttp(http) {
     ProfilePage,
     CreateOrderPage,
     CreateOrderExtrasPage,
-    ChooseMeatPage
+    ChooseMeatPage,
+    SubmitOrderPage
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
@@ -55,7 +61,8 @@ export function getAuthHttp(http) {
       provide: AuthHttp,
       useFactory: getAuthHttp,
       deps: [HttpModule]
-    }
+    },
+    OrderService
   ]
 })
 export class AppModule {}

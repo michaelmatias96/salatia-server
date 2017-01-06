@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { AuthService } from '../../providers/auth-service';
+import { OrderService } from '../../providers/order-service';
 import {CreateOrderExtrasPage} from "../create-order-extras/create-order-extras";
+import { LoadingController } from 'ionic-angular';
 
 /*
   Generated class for the CreateOrder page.
@@ -14,17 +16,31 @@ import {CreateOrderExtrasPage} from "../create-order-extras/create-order-extras"
   templateUrl: 'create-order.html'
 })
 export class CreateOrderPage {
+  mealDetails: Object;
+  constructor(public navCtrl: NavController, private auth: AuthService, private orderService: OrderService, public loadingCtrl: LoadingController) {
+    console.log(orderService.order);
+    this.mealDetails = orderService.mealDetails;
+  }
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private auth: AuthService) {}
+  public getMealTitles() {
+    return Object.keys(this.mealDetails);
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CreateOrderPage');
   }
 
-  public order(type: String) {
-    this.navCtrl.push(CreateOrderExtrasPage, {
-      type: type
-    });
+  public continue(mealId: String) {
+    this.presentLoading();
+    this.orderService.setMealType(mealId);
+    this.navCtrl.push(CreateOrderExtrasPage);
   }
 
+  presentLoading() {
+    let loader = this.loadingCtrl.create({
+      content: "Loading extras...",
+      duration: 500
+    });
+    loader.present();
+  }
 }
