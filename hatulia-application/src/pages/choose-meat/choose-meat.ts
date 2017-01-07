@@ -18,7 +18,7 @@ export class ChooseMeatPage {
   chosenMeat: String;
   constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, private orderService: OrderService) {
     this.meatDetails = orderService.meatDetails;
-    this.chosenMeat = "";
+    this.chosenMeat = null;
   }
 
   ionViewDidLoad() {
@@ -27,7 +27,7 @@ export class ChooseMeatPage {
 
   continue() {
     this.presentLoading();
-    this.orderService.setExtras(this.chosenMeat);
+    this.orderService.setMeat(this.chosenMeat);
     this.navCtrl.push(SubmitOrderPage);
   }
 
