@@ -29,7 +29,7 @@ export class CreateOrderExtrasPage {
 
   public submitExtras() {
     this.presentLoading();
-    this.orderService.setExtras({});
+    this.orderService.setExtras(this.extrasDetails);
     this.navCtrl.push(ChooseMeatPage);
   }
 
