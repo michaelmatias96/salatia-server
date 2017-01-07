@@ -32,7 +32,7 @@ export class CreateOrderPage {
 
   public continue(mealId: String) {
     this.presentLoading();
-    this.orderService.setMealType(mealId);
+    this.orderService.setMeal(mealId);
     this.navCtrl.push(CreateOrderExtrasPage);
   }
 
