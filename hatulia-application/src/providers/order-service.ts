@@ -24,7 +24,7 @@ export class OrderService {
     this.meatDetails = AppSettings.MEAT_DETAILS;
   }
 
-  public setMealType(mealId: String) {
+  public setMeal(mealId: String) {
     this.order.setMeal(mealId);
   }
 
@@ -32,7 +32,7 @@ export class OrderService {
     this.order.setExtras(extras);
   }
 
-  public setMeatType(meatId: String) {
+  public setMeat(meatId: String) {
     this.order.setMeat(meatId);
   }
 
@@ -48,8 +48,8 @@ export class OrderService {
     return this.order.getMeat();
   }
 
-  public submitOrder() {
-    console.log("sending order: " + this.order);
+  public submitOrder(finalOrder: Object) {
+    console.log("sending order: " + finalOrder);
     //send order to server
   }
 }
