@@ -24,14 +24,26 @@ app.use(bodyparser.json({type: 'application/vnd.api+json'}));
 
 // <<-- DB -->>
 mongoose.connect('mongodb://localhost/hatuliaDB');
+var Schema = mongoose.Schema;
+var extraSchema = new Schema({
+    id: Number,
+    name: String,
+    exists: Boolean,
+    imgSrc: String
+});
+
+var extra = app.extra = restful.model('extra', extraSchema). methods(['get','update,','post', 'delete']);
+extra.register(app, '/api/extra');
+var extraModel = mongoose.model('extra',extraSchema);
+
+
 
 
 // Define schema
-var Schema = mongoose.Schema;
 var orderSchema = new Schema({
   orderType: Number,
   meatType: String,
-  extras: [String],
+  extras: [extraSchema],
   name: String,
   email: String,
   phone: String,
@@ -40,6 +52,8 @@ var orderSchema = new Schema({
   orderDate: { type: Date, default: Date.now }
 
 });
+
+
 
 // define basic REST API
 var orders = app.orders = restful.model('orders', orderSchema). methods(['get','update,','post', 'delete']);
