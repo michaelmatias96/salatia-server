@@ -24,15 +24,14 @@ export class SubmitOrderPage {
   submitOrder() {
     this.orderService.submitOrder(this.finalOrder);
   }
-
 }
 
 export class OrderToSend {
   meal: String;
-  extras: Object;
+  extras: Array<String>;
   meat: String;
 
-  constructor(meal: String, extras: Object, meat: String) {
+  constructor(meal: String, extras: Array<String>, meat: String) {
     this.meal = meal;
     this.extras = extras;
     this.meat = meat;

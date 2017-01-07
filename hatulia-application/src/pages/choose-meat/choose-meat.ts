@@ -35,6 +35,14 @@ export class ChooseMeatPage {
     this.chosenMeat = meatId;
   }
 
+  getMeatClass(id) {
+    if (this.chosenMeat == id) {
+      return "checked";
+    } else {
+      return "unchecked";
+    }
+  }
+
   presentLoading() {
     let loader = this.loadingCtrl.create({
       content: "Loading meat types...",

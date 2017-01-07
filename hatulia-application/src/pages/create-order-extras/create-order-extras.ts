@@ -17,10 +17,11 @@ import { LoadingController } from 'ionic-angular';
 })
 export class CreateOrderExtrasPage {
   extrasDetails: Object;
-
+  chosenExtras: Array<String>;
   constructor(public navCtrl: NavController, private orderService: OrderService, private loadingCtrl: LoadingController) {
     console.log(orderService);
     this.extrasDetails = orderService.extrasDetails;
+    this.chosenExtras = [];
   }
 
   ionViewDidLoad() {
@@ -29,8 +30,31 @@ export class CreateOrderExtrasPage {
 
   public submitExtras() {
     this.presentLoading();
-    this.orderService.setExtras(this.extrasDetails);
+    this.orderService.setExtras(this.chosenExtras);
     this.navCtrl.push(ChooseMeatPage);
+  }
+
+  toggleExtra(id) {
+    if (this.chosenExtras.some(x=>x==id)) {
+      var index = this.chosenExtras.indexOf(id, 0);
+      if (index > -1) {
+        this.chosenExtras.splice(index, 1);
+      }
+    } else {
+      this.chosenExtras.push(id);
+    }
+  }
+
+  removeElementFromArray(key) {
+
+  }
+
+  getExtrasClass(id) {
+    if (this.chosenExtras.some(x=>x==id)) {
+      return "checked";
+    } else {
+      return "unchecked";
+    }
   }
 
   presentLoading() {

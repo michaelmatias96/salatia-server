@@ -7,6 +7,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import {AppSettings} from "../app/config/AppSettings";
+import { ToastController } from 'ionic-angular';
+
 
 // Avoid name not found warnings
 
@@ -17,7 +19,7 @@ export class OrderService {
   extrasDetails: Object;
   meatDetails: Object;
 
-  constructor() {
+  constructor(public toastCtrl: ToastController) {
     this.order = new Order();
     this.mealDetails = AppSettings.MEAL_DETAILS;
     this.extrasDetails = AppSettings.EXTRAS_DETAILS;
@@ -28,7 +30,7 @@ export class OrderService {
     this.order.setMeal(mealId);
   }
 
-  public setExtras(extras: Object) {
+  public setExtras(extras: Array<String>) {
     this.order.setExtras(extras);
   }
 
@@ -51,17 +53,22 @@ export class OrderService {
   public submitOrder(finalOrder: Object) {
     console.log("sending order: " + finalOrder);
     //send order to server
+    let toast = this.toastCtrl.create({
+      message: 'Order was sent!',
+      duration: 3000
+    });
+    toast.present();
   }
 }
 
 export class Order {
   private _mealType: String;
-  private _extras: Object;
+  private _extras: Array<String>;
   private _meatType: String;
 
   constructor() {
     this._mealType = "";
-    this._extras = {};
+    this._extras = [];
     this._meatType = "";
   }
 
@@ -69,7 +76,7 @@ export class Order {
     this._mealType = mealId;
   }
 
-  setExtras(extras: Object) {
+  setExtras(extras: Array<String>) {
     this._extras = extras;
   }
 

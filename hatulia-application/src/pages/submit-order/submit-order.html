@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>submit-order</ion-title>
+    <ion-title>Submit Order</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -23,8 +23,8 @@
       <ion-list-header>
         Extras
       </ion-list-header>
-      <ion-item *ngFor="let extra of finalOrder.extras | values:'key':true">
-        <ion-label>{{extra.displayName}}</ion-label>
+      <ion-item *ngFor="let extra of finalOrder.extras">
+        <ion-label>{{extra}}</ion-label>
       </ion-item>
     </ion-list>
     <ion-item>
