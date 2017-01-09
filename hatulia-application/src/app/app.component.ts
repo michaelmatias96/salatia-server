@@ -5,6 +5,7 @@ import { Platform, MenuController, Nav } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { HomePage } from '../pages/home/home';
+import { CreateOrderPage } from '../pages/create-order/create-order';
 import { ListPage } from '../pages/list/list';
 import { ProfilePage } from '../pages/profile/profile';
 import { ViewOrderPage } from '../pages/view-order/view-order';
@@ -31,7 +32,9 @@ export class MyApp {
     // set our app's pages
     this.pages = [
       { title: 'Profile', component: ProfilePage},
-      { title: 'Buy Meal', component: HomePage },
+      { title: 'Home Page', component: HomePage },
+      { title: 'Create Order', component: CreateOrderPage },
+      { title: 'Profile', component: ProfilePage},
       { title: 'My Orders', component: ViewOrderPage }
     ];
   }
