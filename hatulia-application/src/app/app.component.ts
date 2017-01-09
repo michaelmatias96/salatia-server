@@ -12,6 +12,7 @@ import { ViewOrderPage } from '../pages/view-order/view-order';
 import {AuthService} from "../providers/auth-service";
 
 
+
 @Component({
   templateUrl: 'app.html'
 })

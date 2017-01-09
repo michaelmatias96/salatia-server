@@ -36,7 +36,7 @@ export function getAuthHttp(http) {
     ItemDetailsPage,
     ListPage,
     ProfilePage,
-    ViewOrderPage
+    ViewOrderPage,
     ProfilePage,
     CreateOrderPage,
     CreateOrderExtrasPage,
@@ -55,7 +55,7 @@ export function getAuthHttp(http) {
     ItemDetailsPage,
     ListPage,
     ProfilePage,
-    ViewOrderPage
+    ViewOrderPage,
     ProfilePage,
     CreateOrderPage,
     CreateOrderExtrasPage,

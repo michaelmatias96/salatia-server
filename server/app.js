@@ -3,7 +3,7 @@ var restful = require('node-restful');
 var bodyparser = require('body-parser');
 var methodOverride = require('method-override');
 var morgan = require('morgan');
-var mongoose = restful.mongoose;
+var mongoose = require('mongoose');
 var cors = require('cors');
 
 var app = express();
@@ -25,41 +25,55 @@ app.use(bodyparser.json({type: 'application/vnd.api+json'}));
 // <<-- DB -->>
 mongoose.connect('mongodb://localhost/hatuliaDB');
 var Schema = mongoose.Schema;
-var extraSchema = new Schema({
-    id: Number,
-    name: String,
-    exists: Boolean,
-    imgSrc: String
-});
-
-var extra = app.extra = restful.model('extra', extraSchema). methods(['get','update,','post', 'delete']);
-extra.register(app, '/api/extra');
-var extraModel = mongoose.model('extra',extraSchema);
+var Objectid = Schema.Types.ObjectId;
 
 
 
 
-// Define schema
+
+// Define schemas
 var orderSchema = new Schema({
-  orderType: Number,
-  meatType: String,
-  extras: [extraSchema],
-  name: String,
-  email: String,
-  phone: String,
-  finish: {type: Boolean, default: false},
-  finishTime: Date,
-  orderDate: { type: Date, default: Date.now }
+
+    mealType : { type: Objectid, ref: 'mealtypes' },
+    meatType : { type: Objectid, ref: 'meattypes' },
+    extras : [{ type: Objectid, ref: 'extras' }],
+    userID : { type: Objectid, ref: 'users' },
+    date : { type: Date, default: Date.now },
+    status : String
 
 });
 
 
+var usersSchema = new Schema({
+    authID: String
+});
 
-// define basic REST API
-var orders = app.orders = restful.model('orders', orderSchema). methods(['get','update,','post', 'delete']);
-orders.register(app, '/api/orders');
+var meatSchema = new Schema({
 
-// define model so we can create a custom REST
+    name : String,
+    displayName : String,
+    comments : String
+
+});
+
+var mealSchema = new Schema({
+    name : String,
+    displayName : String,
+    comments : String});
+
+
+var extrasSchema = new Schema({
+    name : String,
+    displayName : String,
+    imageSrc : String,
+    inStock : Boolean,
+    comments : String});
+
+//Models:
+var extraModel = mongoose.model('extras',extrasSchema);
+var mealModel = mongoose.model('mealtypes',mealSchema);
+var usersModel = mongoose.model('users',usersSchema);
+var meatModel = mongoose.model('meattypes',meatSchema);
 var ordersModel = mongoose.model('orders',orderSchema);
 
 
@@ -76,6 +90,30 @@ app.get('/auth/login', function(req, res) {
         }
     });
 });
+
+
+//post userID and get order with all the display names
+app.post('/order', function(req,res){
+
+
+    usersModel.findOne({'auth0ID':req.body.userID} , function(err, user) {
+            if (!user) return res.end("no found user");
+            console.log(user);
+
+            ordersModel.findOne({'userID': user._id})
+                .populate('extras', 'displayName imageSrc')
+                .populate('mealType', 'displayName')
+                .populate('meatType', 'displayName')
+                .exec(function(err, orders){
+                    console.log(orders);
+                    res.json(orders);
+                })
+        });
+
+
+
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
