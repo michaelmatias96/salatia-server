@@ -19,7 +19,9 @@ export class CreateOrderPage {
   mealDetails: Object;
   constructor(public navCtrl: NavController, private auth: AuthService, private orderService: OrderService, public loadingCtrl: LoadingController) {
     console.log(orderService.order);
-    this.mealDetails = orderService.mealDetails;
+    orderService.mealsChanged.subscribe(
+      result => this.mealDetails = result
+    );
   }
 
   public getMealTitles() {
@@ -30,7 +32,7 @@ export class CreateOrderPage {
     console.log('ionViewDidLoad CreateOrderPage');
   }
 
-  public continue(mealId: String) {
+  public continue(mealId: string) {
     this.presentLoading();
     this.orderService.setMeal(mealId);
     this.navCtrl.push(CreateOrderExtrasPage);

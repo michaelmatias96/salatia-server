@@ -2,6 +2,8 @@
  * Created by michaelmatias on 1/6/17.
  */
 export class AppSettings {
+  public static get SUBMIT_ORDER_URL(): string { return 'http://localhost:4338/submitOrder/' }
+  public static get GET_MEAL_DETAILS(): string { return 'http://localhost:4338/mealDetails/' }
   public static get API_ENDPOINT(): string { return 'http://localhost:4338/api/'; }
   public static get MEAL_DETAILS(): Object { return {
     "baget": {

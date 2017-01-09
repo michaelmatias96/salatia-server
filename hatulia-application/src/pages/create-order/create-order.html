@@ -21,7 +21,7 @@
 </ion-header>
 
 
-<ion-content padding *ngIf="auth.user" class="card-background-page">
+<ion-content padding *ngIf="auth.user && mealDetails" class="card-background-page">
   <ion-card *ngFor="let meal of mealDetails | values:'key':true" (click)="continue(meal.id)">
     <img src="{{meal.imgUrl}}"/>
     <div class="card-title">{{meal.displayName}}</div>

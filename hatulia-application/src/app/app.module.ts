@@ -1,4 +1,5 @@
 import { NgModule, ErrorHandler } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -11,7 +12,6 @@ import { ChooseMeatPage } from '../pages/choose-meat/choose-meat';
 import { AuthConfig, AuthHttp } from 'angular2-jwt';
 import { AuthService } from '../providers/auth-service.ts';
 import { OrderService } from '../providers/order-service';
-import { HttpModule } from '@angular/http';
 import { Storage } from '@ionic/storage';
 import {SubmitOrderPage} from "../pages/submit-order/submit-order";
 import {ValuesPipe} from "../pipes/pipe";
@@ -60,7 +60,7 @@ export function getAuthHttp(http) {
     {
       provide: AuthHttp,
       useFactory: getAuthHttp,
-      deps: [HttpModule]
+      deps: []
     },
     OrderService
   ]

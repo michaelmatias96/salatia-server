@@ -15,7 +15,7 @@ import {SubmitOrderPage} from "../submit-order/submit-order";
 })
 export class ChooseMeatPage {
   meatDetails: Object;
-  chosenMeat: String;
+  chosenMeat: string;
   constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, private orderService: OrderService) {
     this.meatDetails = orderService.meatDetails;
     this.chosenMeat = null;

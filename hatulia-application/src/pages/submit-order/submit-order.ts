@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import {OrderService} from "../../providers/order-service";
+import {OrderService, Order} from "../../providers/order-service";
+import { ToastController } from 'ionic-angular';
 
 /*
   Generated class for the SubmitOrder page.
@@ -12,9 +13,9 @@ import {OrderService} from "../../providers/order-service";
   templateUrl: 'submit-order.html'
 })
 export class SubmitOrderPage {
-  finalOrder: Object;
-  constructor(public orderService: OrderService) {
-    this.finalOrder = new OrderToSend(orderService.getMeal(), orderService.getExtras(), orderService.getMeat());
+  finalOrder: Order;
+  constructor(public toastCtrl: ToastController, public orderService: OrderService) {
+    this.finalOrder = new Order(orderService.getMeal(), orderService.getExtras(), orderService.getMeat());
   }
 
   ionViewDidLoad() {
@@ -22,18 +23,20 @@ export class SubmitOrderPage {
   }
 
   submitOrder() {
-    this.orderService.submitOrder(this.finalOrder);
+    this.orderService.submitOrder(this.finalOrder)
+      .subscribe(
+        result => this.extractResults(result),
+        error => alert(error)
+      );
   }
-}
 
-export class OrderToSend {
-  meal: String;
-  extras: Array<String>;
-  meat: String;
-
-  constructor(meal: String, extras: Array<String>, meat: String) {
-    this.meal = meal;
-    this.extras = extras;
-    this.meat = meat;
+  extractResults(result) {
+    if (result == "success") {
+      let toast = this.toastCtrl.create({
+        message: 'Order was sent!',
+        duration: 3000
+      });
+      toast.present();
+    }
   }
 }

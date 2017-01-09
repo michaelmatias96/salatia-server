@@ -4,10 +4,10 @@
 
 // src/services/auth/auth.service.ts
 
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import {AppSettings} from "../app/config/AppSettings";
-import { ToastController } from 'ionic-angular';
+import { AppSettings } from "../app/config/AppSettings";
+import { Http, Response } from '@angular/http';
 
 
 // Avoid name not found warnings
@@ -18,23 +18,39 @@ export class OrderService {
   mealDetails: Object;
   extrasDetails: Object;
   meatDetails: Object;
+  mealsChanged = new EventEmitter<Object>();
 
-  constructor(public toastCtrl: ToastController) {
+  constructor(private http: Http) {
     this.order = new Order();
-    this.mealDetails = AppSettings.MEAL_DETAILS;
+    this.getMealDetails()
+      .subscribe(
+        result => this.extractDetails(result),
+        error => alert(error)
+      );
     this.extrasDetails = AppSettings.EXTRAS_DETAILS;
     this.meatDetails = AppSettings.MEAT_DETAILS;
   }
 
-  public setMeal(mealId: String) {
+  extractDetails(result) {
+    this.mealDetails = result;
+    this.mealsChanged.emit(this.mealDetails);
+  }
+
+  public getMealDetails() : Observable<Object> {
+    return this.http.get(AppSettings.GET_MEAL_DETAILS)
+      .map((res:Response) => res.json())
+      .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+  }
+
+  public setMeal(mealId: string) {
     this.order.setMeal(mealId);
   }
 
-  public setExtras(extras: Array<String>) {
+  public setExtras(extras: Array<string>) {
     this.order.setExtras(extras);
   }
 
-  public setMeat(meatId: String) {
+  public setMeat(meatId: string) {
     this.order.setMeat(meatId);
   }
 
@@ -50,37 +66,33 @@ export class OrderService {
     return this.order.getMeat();
   }
 
-  public submitOrder(finalOrder: Object) {
-    console.log("sending order: " + finalOrder);
-    //send order to server
-    let toast = this.toastCtrl.create({
-      message: 'Order was sent!',
-      duration: 3000
-    });
-    toast.present();
+  public submitOrder(finalOrder: Object) : Observable<Object> {
+    return this.http.post(AppSettings.SUBMIT_ORDER_URL, finalOrder)
+      .map((res:Response) => res.json())
+      .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
   }
 }
 
 export class Order {
-  private _mealType: String;
-  private _extras: Array<String>;
-  private _meatType: String;
+  private _mealType: string;
+  private _extras: Array<string>;
+  private _meatType: string;
 
-  constructor() {
-    this._mealType = "";
-    this._extras = [];
-    this._meatType = "";
+  constructor(mealType = "", extras = [], meatType = "") {
+    this._mealType = mealType;
+    this._extras = extras;
+    this._meatType = meatType;
   }
 
-  setMeal(mealId: String) {
+  setMeal(mealId: string) {
     this._mealType = mealId;
   }
 
-  setExtras(extras: Array<String>) {
+  setExtras(extras: Array<string>) {
     this._extras = extras;
   }
 
-  setMeat(meatId: String) {
+  setMeat(meatId: string) {
     this._meatType = meatId;
   }
 

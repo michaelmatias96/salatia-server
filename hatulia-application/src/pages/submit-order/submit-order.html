@@ -17,18 +17,18 @@
   <ion-card>
     Order Details
     <ion-item>
-      <ion-label>Meal Type: {{finalOrder.meal}}</ion-label>
+      <ion-label>Meal Type: {{finalOrder._mealType}}</ion-label>
     </ion-item>
     <ion-list>
       <ion-list-header>
         Extras
       </ion-list-header>
-      <ion-item *ngFor="let extra of finalOrder.extras">
+      <ion-item *ngFor="let extra of finalOrder._extras">
         <ion-label>{{extra}}</ion-label>
       </ion-item>
     </ion-list>
     <ion-item>
-      <ion-label>Meat: {{finalOrder.meat}}</ion-label>
+      <ion-label>Meat: {{finalOrder._meatType}}</ion-label>
     </ion-item>
   </ion-card>
   <button ion-button color="secondary" (click)="submitOrder()">

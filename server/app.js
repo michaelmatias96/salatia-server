@@ -38,28 +38,33 @@ var orderSchema = new Schema({
   finish: {type: Boolean, default: false},
   finishTime: Date,
   orderDate: { type: Date, default: Date.now }
-
 });
 
-// define basic REST API
-var orders = app.orders = restful.model('orders', orderSchema). methods(['get','update,','post', 'delete']);
-orders.register(app, '/api/orders');
+var mealTypesSchema = new Schema({
+    name: String,
+    displayName: String,
+    comments: String,
+    imgUrl: String,
+    price: String
+});
 
 // define model so we can create a custom REST
 var ordersModel = mongoose.model('orders',orderSchema);
-
+var mealTypesModel = mongoose.model('mealtypes', mealTypesSchema);
 
 app.get('/wines', function(req, res) {
   res.send([{name:'wine1'}, {name:'wine2'}]);
 });
 
-app.get('/auth/login', function(req, res) {
-    res.send({
-        success: true,
-        data: {
-          name: "Michael Matias",
-          email: "michael@michaelmatias.com"
-        }
+app.post('/submitOrder/', function(request, response) {
+    console.log(request.body);
+});
+
+app.get('/mealDetails/', function(request, response) {
+    mealTypesModel.find({}, function(err, result) {
+        if (err) throw err;
+        console.log(result);
+        response.send(result);
     });
 });
 

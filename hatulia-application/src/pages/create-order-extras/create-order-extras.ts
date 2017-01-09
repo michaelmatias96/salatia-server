@@ -17,7 +17,7 @@ import { LoadingController } from 'ionic-angular';
 })
 export class CreateOrderExtrasPage {
   extrasDetails: Object;
-  chosenExtras: Array<String>;
+  chosenExtras: Array<string>;
   constructor(public navCtrl: NavController, private orderService: OrderService, private loadingCtrl: LoadingController) {
     console.log(orderService);
     this.extrasDetails = orderService.extrasDetails;
