@@ -2,6 +2,7 @@ import { Injectable,EventEmitter } from '@angular/core';
 import { Http ,Response} from '@angular/http';
 import { OrderObject } from '../shared/OrderObject';
 import { extraObject } from '../shared/extraObject';
+import { AuthService } from '../providers/auth-service';
 
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
@@ -14,13 +15,15 @@ import 'rxjs/add/operator/map';
 */
 @Injectable()
 export class OrderAPI {
-  private order: OrderObject;
+  private order: any;
+  private authid: any;
+  private user: any;
   //Alert when there is a change
-  orderChanged = new EventEmitter<OrderObject>();
+  orderChanged = new EventEmitter<any>();
 
 
 
-  constructor(private http: Http) {}
+  constructor(private http: Http, private authService:AuthService) {}
 
 
   getOrder(){
@@ -28,15 +31,27 @@ export class OrderAPI {
   }
 
 
+  getDataForUser(){
+    this.user = this.authService.user;
+    this.authid = this.user.user_id;
 
-  getData() {
-  return this.http.get('http://192.168.31.39:8080/api/orders').map((response : Response) => response.json()).subscribe(
-    (data : OrderObject) =>
-    {
-      this.order = data;
-      this.orderChanged.emit(this.order);
-    }
-  );
 
-    }
+    console.log(this.authid);
+
+
+    return this.http.post('http://localhost:8080/order',{
+      'userID' : this.authid
+    }).map((response : Response) => response.json()).subscribe(
+      (data : any) =>
+      {
+        this.order = data;
+        console.log(data);
+
+        this.orderChanged.emit(this.order);
+      },
+      error => console.log("Not found order for user")
+    );
+  }
+
+
 }

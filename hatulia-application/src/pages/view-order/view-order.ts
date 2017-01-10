@@ -21,7 +21,7 @@ export class ViewOrderPage {
 
 
 
-  public order:OrderObject;
+    order:any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams , public OrderAPI: OrderAPI) {
 
@@ -32,10 +32,9 @@ export class ViewOrderPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ViewOrderPage');
 
-    this.OrderAPI.getData();
+    this.OrderAPI.getDataForUser();
     this.OrderAPI.orderChanged.subscribe(
-      (order: OrderObject) => {this.order = order[0];
-        console.log(this.order)}
+      (order: any) => this.order = order
     );
 
 

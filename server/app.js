@@ -102,8 +102,8 @@ app.post('/order', function(req,res){
 
             ordersModel.findOne({'userID': user._id})
                 .populate('extras', 'displayName imageSrc')
-                .populate('mealType', 'displayName')
-                .populate('meatType', 'displayName')
+                .populate('mealType', 'displayName imageSrc')
+                .populate('meatType', 'displayName imageSrc')
                 .exec(function(err, orders){
                     console.log(orders);
                     res.json(orders);

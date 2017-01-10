@@ -29,9 +29,9 @@
 
 
   <ion-card>
-    <img src="{{order?.imgSrc}}">
+    <img src="{{order?.mealType.imageSrc}}">
     <div class="card-title">
-      {{order?.meatType}}
+      {{order?.mealType.displayName}}
     </div>
     <div class="card-subtitle">גדול</div>
   </ion-card>
@@ -51,9 +51,9 @@
 
         <ion-item *ngFor="let extra of order?.extras">
           <ion-avatar item-left>
-            <img src="{{extra.imgSrc}}">
+            <img src="{{extra?.imageSrc}}">
           </ion-avatar>
-          <h2>{{extra.name}}</h2>
+          <h2>{{extra?.displayName}}</h2>
 
         </ion-item>
 
@@ -74,12 +74,14 @@
 
     <ion-card-content>
 
-      <button [hidden]="!order?.finish" ion-button full color="secondary" round icon-left>
+
+
+      <button [hidden]="!order?.status=='finish'" ion-button full color="secondary" round icon-left>
         <ion-icon name='md-thumbs-up'></ion-icon>
         מוכן
       </button>
 
-      <button [hidden]="order?.finish" ion-button full round icon-left>
+      <button [hidden]="order?.status=='finish'" ion-button full round icon-left>
         <ion-icon name='md-alarm'></ion-icon>
 בהכנה
       </button>
