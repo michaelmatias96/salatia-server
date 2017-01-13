@@ -21,7 +21,7 @@ export class CreateOrderPage {
     console.log(orderService.order);
     this.mealDetails = orderService.menuDetails["mealDetails"];
     orderService.menuDetailsChanged.subscribe(
-      result => this.mealDetails = result.menuDetails.mealDetails
+      result => this.mealDetails = result.mealDetails
     );
   }
 

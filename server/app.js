@@ -84,30 +84,33 @@ app.get('/menuDetails/', function (request, response) {
     calls.push(function(callback) {
         mealDetailsModel.find({}, function (err, data) {
             if (err) return callback(err);
-            result['mealDetails'] = data;
+            data = {'mealDetails' : data};
+            callback(null, data);
         });
     });
 
     calls.push(function(callback) {
         extrasDetailsModel.find({}, function (err, data) {
             if (err) return callback(err);
-            result['extrasDetails'] = data;
+            data = {'extrasDetails' : data};
+            callback(null, data);
         });
     });
 
     calls.push(function(callback) {
         meatDetailsModel.find({}, function (err, data) {
             if (err) return callback(err);
-            result['meatDetails'] = data;
+            data = {'meatDetails' : data};
+            callback(null, data);
         });
     });
 
-    async.parallel(calls, function(err, result) {
+    async.parallel(calls, function(err, data) {
         /* this code will run after all calls finished the job or
          when any of the calls passes an error */
         if (err)
             return console.log(err);
-        response.send(result);
+        response.send(data);
     });
 });
 

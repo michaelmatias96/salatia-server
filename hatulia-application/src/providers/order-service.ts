@@ -20,16 +20,23 @@ export class OrderService {
 
   constructor(private http: Http) {
     this.order = new Order();
+    this.menuDetails = {};
     this.getMenuDetails()
       .subscribe(
-        result => this.parseMenuDetails(result),
+        result => this.menuDetails = this.parseMenuDetails(result),
         error => alert(error)
       );
   }
 
   parseMenuDetails(result) {
-    this.menuDetails = result;
-    this.menuDetailsChanged.emit(this.menuDetails);
+    var parsedMenuDetails = {};
+    var key;
+    result.forEach(function(menuType) {
+      key = Object.keys(menuType)[0];
+      parsedMenuDetails[key] = menuType[key];
+    });
+    this.menuDetailsChanged.emit(parsedMenuDetails);
+    return parsedMenuDetails;
   }
 
   public getMenuDetails() : Observable<Object> {

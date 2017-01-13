@@ -18,6 +18,9 @@ export class ChooseMeatPage {
   chosenMeat: string;
   constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, private orderService: OrderService) {
     this.meatDetails = orderService.menuDetails['meatDetails'];
+    orderService.menuDetailsChanged.subscribe(
+      result => this.meatDetails = result.meatDetails
+    );
     this.chosenMeat = null;
   }
 

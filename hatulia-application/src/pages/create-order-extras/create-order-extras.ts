@@ -24,7 +24,7 @@ export class CreateOrderExtrasPage {
     this.extrasDetails = orderService.menuDetails["extrasDetails"];
     this.extrasRows = this.getItemsInRowsCols(this.extrasDetails);
     orderService.menuDetailsChanged.subscribe(
-      result => this.extrasDetails = result.menuDetails.extrasDetails
+      result => this.extrasDetails = result.extrasDetails
     );
     this.chosenExtras = [];
   }
