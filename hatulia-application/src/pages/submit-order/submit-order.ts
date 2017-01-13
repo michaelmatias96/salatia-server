@@ -31,7 +31,7 @@ export class SubmitOrderPage {
   }
 
   extractResults(result) {
-    if (result == "success") {
+    if (result.success == true) {
       let toast = this.toastCtrl.create({
         message: 'Order was sent!',
         duration: 3000

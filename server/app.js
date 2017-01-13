@@ -75,6 +75,7 @@ app.get('/wines', function (req, res) {
 
 app.post('/submitOrder/', function (request, response) {
     console.log(request.body);
+    response.send({success : true});
 });
 
 app.get('/menuDetails/', function (request, response) {
