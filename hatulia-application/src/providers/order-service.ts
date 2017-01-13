@@ -15,55 +15,39 @@ import { Http, Response } from '@angular/http';
 @Injectable()
 export class OrderService {
   order: Order;
-  mealDetails: Object;
-  extrasDetails: Object;
-  meatDetails: Object;
-  mealsChanged = new EventEmitter<Object>();
+  menuDetails: Object;
+  menuDetailsChanged = new EventEmitter<Object>();
 
   constructor(private http: Http) {
     this.order = new Order();
-    this.getMealDetails()
+    this.getMenuDetails()
       .subscribe(
-        result => this.extractDetails(result),
+        result => this.parseMenuDetails(result),
         error => alert(error)
       );
-    this.extrasDetails = AppSettings.EXTRAS_DETAILS;
-    this.meatDetails = AppSettings.MEAT_DETAILS;
   }
 
-  extractDetails(result) {
-    this.mealDetails = result;
-    this.mealsChanged.emit(this.mealDetails);
+  parseMenuDetails(result) {
+    this.menuDetails = result;
+    this.menuDetailsChanged.emit(this.menuDetails);
   }
 
-  public getMealDetails() : Observable<Object> {
-    return this.http.get(AppSettings.GET_MEAL_DETAILS)
+  public getMenuDetails() : Observable<Object> {
+    return this.http.get(AppSettings.GET_MENU_DETAILS)
       .map((res:Response) => res.json())
       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
   }
 
   public setMeal(mealId: string) {
-    this.order.setMeal(mealId);
+    this.order.mealType = mealId;
   }
 
   public setExtras(extras: Array<string>) {
-    this.order.setExtras(extras);
+    this.order.extras = extras;
   }
 
   public setMeat(meatId: string) {
-    this.order.setMeat(meatId);
-  }
-
-  public getMeal() {
-    return this.order.getMeal();
-  }
-
-  public getExtras() {
-    return this.order.getExtras();
-  }
-
-  public getMeat() {
-    return this.order.getMeat();
+    this.order.meatType = meatId;
   }
 
   public submitOrder(finalOrder: Object) : Observable<Object> {
@@ -74,37 +58,13 @@ export class OrderService {
 }
 
 export class Order {
-  private _mealType: string;
-  private _extras: Array<string>;
-  private _meatType: string;
+  mealType: string;
+  extras: Array<string>;
+  meatType: string;
 
   constructor(mealType = "", extras = [], meatType = "") {
-    this._mealType = mealType;
-    this._extras = extras;
-    this._meatType = meatType;
-  }
-
-  setMeal(mealId: string) {
-    this._mealType = mealId;
-  }
-
-  setExtras(extras: Array<string>) {
-    this._extras = extras;
-  }
-
-  setMeat(meatId: string) {
-    this._meatType = meatId;
-  }
-
-  getMeal() {
-    return this._mealType;
-  }
-
-  getExtras() {
-    return this._extras;
-  }
-
-  getMeat() {
-    return this._meatType;
+    this.mealType = mealType;
+    this.extras = extras;
+    this.meatType = meatType;
   }
 }

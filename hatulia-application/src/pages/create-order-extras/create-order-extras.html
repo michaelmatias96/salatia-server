@@ -12,11 +12,19 @@
 </ion-header>
 
 
-<ion-content padding>
-
-  <ion-card *ngFor="let extra of extrasDetails | values:'key':true" (click)="toggleExtra(extra.id)">
-    <img [ngClass]="getExtrasClass(extra.id)" src="{{extra.imgUrl}}"/>
-  </ion-card>
+<ion-content padding *ngIf="extrasDetails">
+  <ion-row *ngFor="let extrasRow of extrasRows">
+    <ion-col *ngFor="let extra of extrasRow">
+      <ion-card [ngClass]="getExtrasClass(extra.id)">
+        <ion-card-header>
+          {{extra.displayName}}
+        </ion-card-header>
+        <ion-card-content (click)="toggleExtra(extra.id)">
+          <img src="{{extra.imageSrc}}"/>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 
   <button ion-button color="secondary" (click)="submitExtras()">
     Next

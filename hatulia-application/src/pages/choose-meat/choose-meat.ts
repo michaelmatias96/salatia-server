@@ -17,7 +17,7 @@ export class ChooseMeatPage {
   meatDetails: Object;
   chosenMeat: string;
   constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, private orderService: OrderService) {
-    this.meatDetails = orderService.meatDetails;
+    this.meatDetails = orderService.menuDetails['meatDetails'];
     this.chosenMeat = null;
   }
 
@@ -33,6 +33,19 @@ export class ChooseMeatPage {
 
   chooseMeat(meatId) {
     this.chosenMeat = meatId;
+  }
+
+  getItemsInRowsCols(items) {
+    var rows = [];
+    var currentRow = [];
+    for (var i = 0; i < items.length; i++) {
+      currentRow.push(items[i]);
+      if (i != 0 && (i+1) % 3 == 0) {
+        rows.push(currentRow);
+        currentRow = [];
+      }
+    }
+    return rows;
   }
 
   getMeatClass(id) {

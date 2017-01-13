@@ -19,8 +19,9 @@ export class CreateOrderPage {
   mealDetails: Object;
   constructor(public navCtrl: NavController, private auth: AuthService, private orderService: OrderService, public loadingCtrl: LoadingController) {
     console.log(orderService.order);
-    orderService.mealsChanged.subscribe(
-      result => this.mealDetails = result
+    this.mealDetails = orderService.menuDetails["mealDetails"];
+    orderService.menuDetailsChanged.subscribe(
+      result => this.mealDetails = result.menuDetails.mealDetails
     );
   }
 

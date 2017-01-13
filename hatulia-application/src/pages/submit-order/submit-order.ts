@@ -15,7 +15,7 @@ import { ToastController } from 'ionic-angular';
 export class SubmitOrderPage {
   finalOrder: Order;
   constructor(public toastCtrl: ToastController, public orderService: OrderService) {
-    this.finalOrder = new Order(orderService.getMeal(), orderService.getExtras(), orderService.getMeat());
+    this.finalOrder = new Order(orderService.order.mealType, orderService.order.extras, orderService.order.meatType);
   }
 
   ionViewDidLoad() {

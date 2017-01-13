@@ -17,10 +17,15 @@ import { LoadingController } from 'ionic-angular';
 })
 export class CreateOrderExtrasPage {
   extrasDetails: Object;
+  extrasRows: Array<Array<Object>>;
   chosenExtras: Array<string>;
   constructor(public navCtrl: NavController, private orderService: OrderService, private loadingCtrl: LoadingController) {
     console.log(orderService);
-    this.extrasDetails = orderService.extrasDetails;
+    this.extrasDetails = orderService.menuDetails["extrasDetails"];
+    this.extrasRows = this.getItemsInRowsCols(this.extrasDetails);
+    orderService.menuDetailsChanged.subscribe(
+      result => this.extrasDetails = result.menuDetails.extrasDetails
+    );
     this.chosenExtras = [];
   }
 
@@ -45,8 +50,17 @@ export class CreateOrderExtrasPage {
     }
   }
 
-  removeElementFromArray(key) {
-
+  getItemsInRowsCols(items) {
+    var rows = [];
+    var currentRow = [];
+    for (var i = 0; i < items.length; i++) {
+      currentRow.push(items[i]);
+      if (i != 0 && (i+1) % 3 == 0) {
+        rows.push(currentRow);
+        currentRow = [];
+      }
+    }
+    return rows;
   }
 
   getExtrasClass(id) {
