@@ -26,5 +26,16 @@ module.exports = {
                 accept(data);
             });
         });
+    },
+    createOrder(mealId, meatId, extrasIds, userId) {
+        return new Promise((accept, reject) => {
+            var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId, creationTime: new Date().toISOString()});
+            order.save(function(err, result) {
+                if (err)
+                    return reject(err);
+
+                accept(result);
+            });
+        })
     }
 };

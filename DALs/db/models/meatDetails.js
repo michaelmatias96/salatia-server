@@ -24,5 +24,11 @@ module.exports = {
                 accept(data);
             });
         });
+    },
+    getObjectId(id) {
+        meatDetailsModel.findOne({'id' : id}).exec(function(err, result) {
+            if (err) console.log(err);
+            accept(mongoose.Types.ObjectId(result._id.toString()));
+        })
     }
 };

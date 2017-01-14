@@ -24,5 +24,17 @@ module.exports = {
                 accept(data);
             });
         });
+    },
+    getObjectIds(idList) {
+        return new Promise((accept, reject) => {
+            extrasDetailsModel.find({id: { $in : idList}}).exec(function(err, result) {
+                result = result.map(function (document) {
+                    return mongoose.Types.ObjectId(document._id.toString());
+                });
+                if (err)
+                    return reject(err);
+                accept(result);
+            });
+        });
     }
 };

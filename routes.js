@@ -23,60 +23,38 @@ app.use(cors({
             ok();
         else if (origin.startsWith("file://"))
             ok();
+        else if (origin == "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop")
+            ok();
         else
             notAuthorized();
     }
 }));
 
-app.post('/submitOrder/', authCheckMiddlware, function (request, response) {
-    var calls = [];
+app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var userId = request.user.sub;
-
-    var mealId = request.body.mealType;
-    var mealObjectId;
-    calls.push(function(callback) {
-        mealDetailsModel.findOne({'id' : mealId}).exec(function(err, result) {
-            if (err) console.log(err);
-            mealObjectId = mongoose.Types.ObjectId(result._id.toString());
-            callback(err, result);
-        })
-    });
-
-    var meatId = request.body.meatType;
-    var meatObjectId;
-    calls.push(function(callback) {
-        meatDetailsModel.findOne({'id' : mealId}).exec(function(err, result) {
-            if (err) console.log(err);
-            meatObjectId = mongoose.Types.ObjectId(result._id.toString());
-            callback(err, result);
-        })
-    });
-
-
     var extrasIds = request.body.extras;
+    var meatId = request.body.meatType;
+    var mealId = request.body.mealType;
+
     var extrasObjectIds;
-    calls.push(function(callback) {
-        extrasDetailsModel.find({id: { $in : extrasIds}}).exec(function(err, result) {
-            result = result.map(function (document) {
-                return mongoose.Types.ObjectId(document._id.toString());
-            });
-            extrasObjectIds = result;
-            callback(err, result);
-        });
-    });
+    var meatObjectId;
+    var mealObjectId;
 
-    async.parallel(calls, function(err, data) {
-        /* this code will run after all calls finished the job or
-         when any of the calls passes an error */
-        if (err)
-            return console.log(err);
-        var order = new ordersModel({mealId: mealObjectId, meatId: meatObjectId, extras: extrasObjectIds, userId: userId, creationTime: new Date().toISOString()});
-        order.save(function(result) {
+    Promise.all([
+        db.extrasDetails.getObjectIds(extrasIds),
+        db.meatDetails.getObjectId(meatId),
+        db.mealDetails.getObjectId(mealId)
+    ])
+        .then(results => {
+            let [extrasObjectIds, meatObjectId, mealObjectId] = results;
+            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId);
+        })
+        .then(results => {
             response.send({success : true});
+        })
+        .catch(err => {
+            response.send({success: false});
         });
-    });
-
-
 });
 
 app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
@@ -123,7 +101,7 @@ app.get('/orders', authCheckMiddlware, function(req,res){
 app.get('/mealTest', function(req, res) {
     db.mealDetails.getAll()
         .then(result => res.send(result))
-        .catch(err => res.send(err))
+        .catch(err => res.send(err));
 });
 
 
