@@ -23,4 +23,4 @@ require("./DALs/DALs").init();
 
 global.log = console;
 
-require('./routes/routes');
+require('./routes');

@@ -1,17 +1,14 @@
-const {authCheckMiddlware} = require("../auth");
+const {authCheckMiddlware} = require("./auth");
 const bodyparser = require('body-parser');
-const db = require("../DALs/db/db");
+const db = require("./DALs/db/db");
 const cors = require("cors");
 const express = require("express");
 
-const api = express.Router();
-app.use("/api", api);
+app.use(bodyparser.urlencoded({'extended': 'true'}));// TODO: check if this is needed
+app.use(bodyparser.json());
+app.use(bodyparser.json({type: 'application/vnd.api+json'})); // TODO: check if this is needed
 
-api.use(bodyparser.urlencoded({'extended': 'true'}));// TODO: check if this is needed
-api.use(bodyparser.json());
-api.use(bodyparser.json({type: 'application/vnd.api+json'})); // TODO: check if this is needed
-
-api.use(cors({
+app.use(cors({
     origin: function(origin, callback) {
         function ok() {
             callback(null, true);
@@ -34,7 +31,7 @@ api.use(cors({
     }
 }));
 
-api.post('/submitOrder', authCheckMiddlware, function (request, response) {
+app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var userId = request.user.sub;
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
@@ -45,10 +42,10 @@ api.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var mealObjectId;
 
     Promise.all([
-        db.extrasDetails.getObjectIds(extrasIds),
-        db.meatDetails.getObjectId(meatId),
-        db.mealDetails.getObjectId(mealId)
-    ])
+            db.extrasDetails.getObjectIds(extrasIds),
+            db.meatDetails.getObjectId(meatId),
+            db.mealDetails.getObjectId(mealId)
+        ])
         .then(results => {
             let [extrasObjectIds, meatObjectId, mealObjectId] = results;
             return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId);
@@ -61,12 +58,12 @@ api.post('/submitOrder', authCheckMiddlware, function (request, response) {
         });
 });
 
-api.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
+app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
     Promise.all([
-        db.mealDetails.getAll(),
-        db.extrasDetails.getAll(),
-        db.meatDetails.getAll()
-    ])
+            db.mealDetails.getAll(),
+            db.extrasDetails.getAll(),
+            db.meatDetails.getAll()
+        ])
         .then(results => {
             let [mealDetails, extrasDetails, meatDetails] = results;
 
@@ -90,7 +87,7 @@ api.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
         });
 });
 
-api.get('/orders', authCheckMiddlware, function(req,res){
+app.get('/orders', authCheckMiddlware, function(req,res){
     ordersModel.findOne({'userId': req.user.sub})
         .populate('extras', 'displayName imageSrc')
         .populate('mealType', 'displayName imageSrc')
@@ -101,9 +98,20 @@ api.get('/orders', authCheckMiddlware, function(req,res){
         });
 });
 
-api.get('/mealTest', function(req, res) {
+app.get('/mealTest', function(req, res) {
     db.mealDetails.getAll()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
 
+app.get('/', function(req, res) {
+    res.send("Hello world!");
+});
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+    console.error(req, res);
+});
