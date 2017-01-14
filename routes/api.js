@@ -1,6 +1,6 @@
-const {authCheckMiddlware} = require("./auth");
+const {authCheckMiddlware} = require("../auth");
 const bodyparser = require('body-parser');
-const db = require("./DALs/db/db");
+const db = require("../DALs/db/db");
 const cors = require("cors");
 const express = require("express");
 
