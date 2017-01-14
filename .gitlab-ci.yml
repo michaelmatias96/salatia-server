@@ -12,6 +12,7 @@ build:
 
 deploy-heroku:
   stage: deploy
+  environment: heroku production
   script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
