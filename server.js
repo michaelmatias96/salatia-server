@@ -2,7 +2,7 @@
 
 // for safety
 process.on('uncaughtException', function (err) {
-    console.err(err ? err.stack || err : err);
+    console.error(err ? err.stack || err : err);
 });
 
 const express = require("express");
