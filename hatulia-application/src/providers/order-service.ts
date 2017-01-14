@@ -8,7 +8,8 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { AppSettings } from "../app/config/AppSettings";
 import { Http, Response } from '@angular/http';
-
+import {AuthHttp} from 'angular2-jwt';
+import {AuthService} from "./auth-service";
 
 // Avoid name not found warnings
 
@@ -18,7 +19,7 @@ export class OrderService {
   menuDetails: Object;
   menuDetailsChanged = new EventEmitter<Object>();
 
-  constructor(private http: Http) {
+  constructor(private http: Http, public authHttp: AuthHttp, public auth: AuthService) {
     this.order = new Order();
     this.menuDetails = {};
     this.getMenuDetails()
@@ -40,7 +41,7 @@ export class OrderService {
   }
 
   public getMenuDetails() : Observable<Object> {
-    return this.http.get(AppSettings.GET_MENU_DETAILS)
+    return this.authHttp.get('http://localhost:4338/menuDetails/')
       .map((res:Response) => res.json())
       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
   }
@@ -58,7 +59,7 @@ export class OrderService {
   }
 
   public submitOrder(finalOrder: Object) : Observable<Object> {
-    return this.http.post(AppSettings.SUBMIT_ORDER_URL, finalOrder)
+    return this.authHttp.post(AppSettings.SUBMIT_ORDER_URL, finalOrder)
       .map((res:Response) => res.json())
       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
   }

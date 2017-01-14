@@ -1,16 +1,13 @@
 import { NgModule, ErrorHandler } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { Http } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-import { ItemDetailsPage } from '../pages/item-details/item-details';
-import { ListPage } from '../pages/list/list';
 import { ProfilePage } from '../pages/profile/profile';
 import { CreateOrderPage } from '../pages/create-order/create-order';
 import { CreateOrderExtrasPage } from '../pages/create-order-extras/create-order-extras';
 import { ChooseMeatPage } from '../pages/choose-meat/choose-meat';
 import { AuthConfig, AuthHttp } from 'angular2-jwt';
-import { AuthService } from '../providers/auth-service.ts';
+import { AuthService } from '../providers/auth-service';
 import { OrderService } from '../providers/order-service';
 import { Storage } from '@ionic/storage';
 import {SubmitOrderPage} from "../pages/submit-order/submit-order";
@@ -28,9 +25,6 @@ export function getAuthHttp(http) {
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
-    ItemDetailsPage,
-    ListPage,
     ProfilePage,
     CreateOrderPage,
     CreateOrderExtrasPage,
@@ -39,15 +33,11 @@ export function getAuthHttp(http) {
     ValuesPipe
   ],
   imports: [
-    IonicModule.forRoot(MyApp),
-    HttpModule
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
-    ItemDetailsPage,
-    ListPage,
     ProfilePage,
     CreateOrderPage,
     CreateOrderExtrasPage,
@@ -60,7 +50,7 @@ export function getAuthHttp(http) {
     {
       provide: AuthHttp,
       useFactory: getAuthHttp,
-      deps: []
+      deps: [Http]
     },
     OrderService
   ]
