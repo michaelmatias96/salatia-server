@@ -1,0 +1,23 @@
+image: ruby:latest
+
+stages:
+  - build
+  - deploy
+
+
+build:
+  stage: build
+  script:
+    - echo Done
+
+deploy-heroku:
+  stage: deploy
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=hatulia-app --api-key=$HEROKU_PRODUCTION_API_KEY
+  when: manual
+  only:
+    - master
+
