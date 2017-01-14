@@ -1,10 +1,20 @@
 #!/usr/bin/env node
-var app = require('./app');
+const express = require("express");
 
 
-app.set('port', 4338);
-app.set('view engine', 'html');
+// config
+const currentConfig = require("./currentConfig");
+global.config = require("./configs/default");
+Object.assign(global.config, require("./configs/" + currentConfig));
 
-var server = app.listen(app.get('port'), function() {
-    console.log('Express server listening on port ' + server.address().port);
+
+global.app = express();
+app.listen(config.port, function() {
+    console.info("Listening on", config.port);
 });
+
+require("./DALs/DALs").init();
+
+global.log = console;
+
+require('./routes');

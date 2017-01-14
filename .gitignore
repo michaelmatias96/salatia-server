@@ -12,7 +12,7 @@ log.txt
 .vscode/
 npm-debug.log*
 
-.idea/
+.idea
 .sass-cache/
 .tmp/
 .versions/
@@ -21,7 +21,7 @@ dist/
 node_modules/
 tmp/
 temp/
-hooks/
+hooks
 platforms/
 plugins/
 plugins/android.json
