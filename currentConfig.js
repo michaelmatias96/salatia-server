@@ -2,4 +2,4 @@
  * Created by michaelmatias on 1/14/17.
  */
 
-module.exports = "prod";
+module.exports = "integ";
