@@ -3,7 +3,7 @@ import { Http ,Response} from '@angular/http';
 import { OrderObject } from '../shared/OrderObject';
 import { extraObject } from '../shared/extraObject';
 import { AuthService } from '../providers/auth-service';
-
+import {AuthHttp} from 'angular2-jwt';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
@@ -20,7 +20,7 @@ export class OrderAPI {
 
 
 
-  constructor(private http: Http, private authService:AuthService) {}
+  constructor(private http: Http, public authHttp: AuthHttp, private authService:AuthService) {}
 
 
   getOrder(){
@@ -28,8 +28,8 @@ export class OrderAPI {
   }
 
 
-  getDataForUser(){
-    return this.http.get('http://localhost:4338/order').map((response : Response) => response.json()).subscribe(
+  getOrders(){
+    return this.authHttp.get('http://localhost:4338/orders').map((response : Response) => response.json()).subscribe(
       (data : any) =>
       {
         this.order = data;

@@ -23,7 +23,7 @@
 
 <ion-content padding *ngIf="auth.user && mealDetails" class="card-background-page">
   <ion-card *ngFor="let meal of mealDetails | values:'key':true" (click)="continue(meal.id)">
-    <img src="{{meal.imgUrl}}"/>
+    <img src="{{meal.imageSrc}}"/>
     <div class="card-title">{{meal.displayName}}</div>
     <div class="card-subtitle">{{meal.price}}</div>
   </ion-card>

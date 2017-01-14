@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {OrderService, Order} from "../../providers/order-service";
-import { ToastController } from 'ionic-angular';
+import {ToastController, NavController} from 'ionic-angular';
+import {ViewOrderPage} from "../view-order/view-order";
 
 /*
   Generated class for the SubmitOrder page.
@@ -14,7 +15,7 @@ import { ToastController } from 'ionic-angular';
 })
 export class SubmitOrderPage {
   finalOrder: Order;
-  constructor(public toastCtrl: ToastController, public orderService: OrderService) {
+  constructor(public toastCtrl: ToastController, public orderService: OrderService, public navCtrl: NavController) {
     this.finalOrder = new Order(orderService.order.mealType, orderService.order.extras, orderService.order.meatType);
   }
 
@@ -37,6 +38,7 @@ export class SubmitOrderPage {
         duration: 3000
       });
       toast.present();
+      this.navCtrl.push(ViewOrderPage);
     }
   }
 }

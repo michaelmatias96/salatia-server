@@ -13,7 +13,7 @@ var morgan = require('morgan');
 var mongoose = restful.mongoose;
 var async = require('async');
 
-var config = require('./config').config;
+var config = require('./config');
 
 var authCheck = jwt({
     secret: new Buffer(config.auth0SecretKey),
@@ -45,7 +45,11 @@ var orderSchema = new Schema({
     extras: [Schema.Types.ObjectId],
     userId: String,
     status: {type: String, default: config.newOrderDefaultStatus},
-    creationTime: {type: Date, default: new Date().toISOString()}
+    creationTime: {type: Date, default: Date.now()}
+});
+
+var usersSchema = new Schema({
+    authID: String
 });
 
 var mealDetailsSchema = new Schema({
@@ -118,7 +122,7 @@ app.post('/submitOrder/', authCheck, function (request, response) {
          when any of the calls passes an error */
         if (err)
             return console.log(err);
-        var order = new ordersModel({mealId: mealObjectId, meatId: meatObjectId, extras: extrasObjectIds, user: userId});
+        var order = new ordersModel({mealId: mealObjectId, meatId: meatObjectId, extras: extrasObjectIds, userId: userId, creationTime: new Date().toISOString()});
         order.save(function(result) {
             response.send({success : true});
         });
@@ -164,24 +168,15 @@ app.get('/menuDetails/', authCheck, function (request, response) {
 });
 
 
-//post userID and get order with all the display names
-app.post('/orders', function(req,res){
-    usersModel.findOne({'auth0ID':req.body.userID} , function(err, user) {
-            if (!user) return res.end("no found user");
-            console.log(user);
-
-            ordersModel.findOne({'userID': user._id})
-                .populate('extras', 'displayName imageSrc')
-                .populate('mealType', 'displayName imageSrc')
-                .populate('meatType', 'displayName imageSrc')
-                .exec(function(err, orders){
-                    console.log(orders);
-                    res.json(orders);
-                })
+app.get('/orders', authCheck, function(req,res){
+    ordersModel.findOne({'userId': req.user.sub})
+        .populate('extras', 'displayName imageSrc')
+        .populate('mealType', 'displayName imageSrc')
+        .populate('meatType', 'displayName imageSrc')
+        .exec(function(err, orders){
+            console.log(orders);
+            res.json(orders);
         });
-
-
-
 });
 
 

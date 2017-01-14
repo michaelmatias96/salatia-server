@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import {OrderAPI} from '../../providers/order-api';
-import {OrderObject} from '../../shared/OrderObject';
 
 
 
@@ -19,31 +18,14 @@ import {OrderObject} from '../../shared/OrderObject';
 })
 export class ViewOrderPage {
 
-
-
-    order:any;
-
-  constructor(public navCtrl: NavController, public navParams: NavParams , public OrderAPI: OrderAPI) {
-
-  }
-
-
+  order:any;
+  constructor(public navCtrl: NavController, public navParams: NavParams , public OrderAPI: OrderAPI) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ViewOrderPage');
-
-    this.OrderAPI.getDataForUser();
+    this.OrderAPI.getOrders();
     this.OrderAPI.orderChanged.subscribe(
       (order: any) => this.order = order
     );
-
-
-
-
   }
-
-
-
-
-
 }
