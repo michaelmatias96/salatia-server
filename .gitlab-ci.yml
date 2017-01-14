@@ -18,7 +18,6 @@ deploy-heroku:
     - apt-get install -y ruby-dev
     - gem install dpl
     - dpl --provider=heroku --app=hatulia-app --api-key=$HEROKU_PRODUCTION_API_KEY
-  when: manual
   only:
-    - master
+    - deployment-heroku-prod
 
