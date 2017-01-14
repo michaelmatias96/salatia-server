@@ -21,7 +21,7 @@ app.use(cors({
 
         if (origin == null)
             ok();
-        if (origin.startsWith("http://localhost:"))
+        else if (origin.startsWith("http://localhost:"))
             ok();
         else if (origin.startsWith("file://"))
             ok();
