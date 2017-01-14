@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+
+// for safety
+process.on('uncaughtException', function (err) {
+    console.err(err ? err.stack || err : err);
+});
+
 const express = require("express");
 
 
