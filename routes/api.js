@@ -2,14 +2,16 @@ const {authCheckMiddlware} = require("./auth");
 const bodyparser = require('body-parser');
 const db = require("./DALs/db/db");
 const cors = require("cors");
+const express = require("express");
 
-app.use(bodyparser.urlencoded({'extended': 'true'}));// TODO: check if this is needed
-app.use(bodyparser.json());
-app.use(bodyparser.json({type: 'application/vnd.api+json'})); // TODO: check if this is needed
+const api = express.Router();
+app.use("/api", api);
 
+api.use(bodyparser.urlencoded({'extended': 'true'}));// TODO: check if this is needed
+api.use(bodyparser.json());
+api.use(bodyparser.json({type: 'application/vnd.api+json'})); // TODO: check if this is needed
 
-
-app.use(cors({
+api.use(cors({
     origin: function(origin, callback) {
         function ok() {
             callback(null, true);
@@ -32,7 +34,7 @@ app.use(cors({
     }
 }));
 
-app.post('/submitOrder', authCheckMiddlware, function (request, response) {
+api.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var userId = request.user.sub;
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
@@ -59,7 +61,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         });
 });
 
-app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
+api.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
     Promise.all([
         db.mealDetails.getAll(),
         db.extrasDetails.getAll(),
@@ -88,8 +90,7 @@ app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
         });
 });
 
-
-app.get('/orders', authCheckMiddlware, function(req,res){
+api.get('/orders', authCheckMiddlware, function(req,res){
     ordersModel.findOne({'userId': req.user.sub})
         .populate('extras', 'displayName imageSrc')
         .populate('mealType', 'displayName imageSrc')
@@ -100,21 +101,9 @@ app.get('/orders', authCheckMiddlware, function(req,res){
         });
 });
 
-app.get('/mealTest', function(req, res) {
+api.get('/mealTest', function(req, res) {
     db.mealDetails.getAll()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
 
-app.get('/', function(req, res) {
-    res.send("Hello world!");
-});
-
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-    console.error(req, res);
-});
