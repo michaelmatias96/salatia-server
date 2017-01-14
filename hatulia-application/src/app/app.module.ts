@@ -6,10 +6,12 @@ import { ProfilePage } from '../pages/profile/profile';
 import { CreateOrderPage } from '../pages/create-order/create-order';
 import { CreateOrderExtrasPage } from '../pages/create-order-extras/create-order-extras';
 import { ChooseMeatPage } from '../pages/choose-meat/choose-meat';
+import { ViewOrderPage } from '../pages/view-order/view-order';
 import { AuthConfig, AuthHttp } from 'angular2-jwt';
 import { AuthService } from '../providers/auth-service';
 import { OrderService } from '../providers/order-service';
 import { Storage } from '@ionic/storage';
+import { OrderAPI } from '../providers/order-api';
 import {SubmitOrderPage} from "../pages/submit-order/submit-order";
 import {ValuesPipe} from "../pipes/pipe";
 
@@ -26,6 +28,7 @@ export function getAuthHttp(http) {
   declarations: [
     MyApp,
     ProfilePage,
+    ViewOrderPage,
     CreateOrderPage,
     CreateOrderExtrasPage,
     ChooseMeatPage,
@@ -38,6 +41,7 @@ export function getAuthHttp(http) {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    ViewOrderPage,
     ProfilePage,
     CreateOrderPage,
     CreateOrderExtrasPage,
@@ -47,6 +51,7 @@ export function getAuthHttp(http) {
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthService,
+    OrderAPI,
     {
       provide: AuthHttp,
       useFactory: getAuthHttp,

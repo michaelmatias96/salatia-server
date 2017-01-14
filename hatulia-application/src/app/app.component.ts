@@ -6,6 +6,7 @@ import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { CreateOrderPage } from '../pages/create-order/create-order';
 import { ProfilePage } from '../pages/profile/profile';
+import { ViewOrderPage } from '../pages/view-order/view-order';
 import {AuthService} from "../providers/auth-service";
 
 
@@ -30,6 +31,7 @@ export class MyApp {
     this.pages = [
       { title: 'Profile', component: ProfilePage},
       { title: 'Create Order', component: CreateOrderPage },
+      { title: 'My Orders', component: ViewOrderPage }
     ];
   }
 

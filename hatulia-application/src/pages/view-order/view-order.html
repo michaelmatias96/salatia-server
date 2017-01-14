@@ -1,0 +1,95 @@
+<!--
+  Generated template for the ViewOrder page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+
+
+    <ion-title>
+      מצב הזמנה
+    </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="card-background-page">
+
+
+
+
+
+  <ion-card>
+    <img src="{{order?.mealType.imageSrc}}">
+    <div class="card-title">
+      {{order?.mealType.displayName}}
+    </div>
+    <div class="card-subtitle">גדול</div>
+  </ion-card>
+
+
+
+  <ion-card>
+
+    <ion-card-header>
+      תוספות
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <ion-list>
+
+
+        <ion-item *ngFor="let extra of order?.extras">
+          <ion-avatar item-left>
+            <img src="{{extra?.imageSrc}}">
+          </ion-avatar>
+          <h2>{{extra?.displayName}}</h2>
+
+        </ion-item>
+
+
+
+
+      </ion-list>
+
+    </ion-card-content>
+
+  </ion-card>
+
+  <ion-card>
+
+    <ion-card-header>
+      סטטוס
+    </ion-card-header>
+
+    <ion-card-content>
+
+
+
+      <button [hidden]="!order?.status=='finish'" ion-button full color="secondary" round icon-left>
+        <ion-icon name='md-thumbs-up'></ion-icon>
+        מוכן
+      </button>
+
+      <button [hidden]="order?.status=='finish'" ion-button full round icon-left>
+        <ion-icon name='md-alarm'></ion-icon>
+בהכנה
+      </button>
+
+
+
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>
