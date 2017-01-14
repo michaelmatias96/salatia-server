@@ -4,8 +4,7 @@ import { Platform, MenuController, Nav } from 'ionic-angular';
 
 import { StatusBar, Splashscreen } from 'ionic-native';
 
-import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
+import { CreateOrderPage } from '../pages/create-order/create-order';
 import { ProfilePage } from '../pages/profile/profile';
 import {AuthService} from "../providers/auth-service";
 
@@ -30,8 +29,7 @@ export class MyApp {
     // set our app's pages
     this.pages = [
       { title: 'Profile', component: ProfilePage},
-      { title: 'Buy Meal', component: HomePage },
-      { title: 'My Orders', component: ListPage },
+      { title: 'Create Order', component: CreateOrderPage },
     ];
   }
 
