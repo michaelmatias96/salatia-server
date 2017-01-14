@@ -1,10 +1,32 @@
 const {authCheckMiddlware} = require("./auth");
 const bodyparser = require('body-parser');
 const db = require("./DALs/db/db");
+const cors = require("cors");
 
 app.use(bodyparser.urlencoded({'extended': 'true'}));// TODO: check if this is needed
 app.use(bodyparser.json());
 app.use(bodyparser.json({type: 'application/vnd.api+json'})); // TODO: check if this is needed
+
+
+
+app.use(cors({
+    origin: function(origin, callback) {
+        function ok() {
+            callback(null, true);
+        }
+
+        function notAuthorized() {
+            callback('Bad Request', false);
+        }
+
+        if (origin.startsWith("http://localhost:"))
+            ok();
+        else if (origin.startsWith("file://"))
+            ok();
+        else
+            notAuthorized();
+    }
+}));
 
 app.post('/submitOrder/', authCheckMiddlware, function (request, response) {
     var calls = [];
@@ -110,4 +132,5 @@ app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
+    console.error(req, res);
 });
