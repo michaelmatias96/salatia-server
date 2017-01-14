@@ -27,14 +27,17 @@ module.exports = {
     },
     getObjectIds(idList) {
         return new Promise((accept, reject) => {
-            extrasDetailsModel.find({id: { $in : idList}}).exec(function(err, result) {
-                result = result.map(function (document) {
-                    return mongoose.Types.ObjectId(document._id.toString());
+            extrasDetailsModel
+                .find({id: { $in : idList}})
+                .exec(function(err, result) {
+                    if (err)
+                        return reject(err);
+
+                    result = result.map(function (document) {
+                        return mongoose.Types.ObjectId(document._id.toString());
+                    });
+                    accept(result);
                 });
-                if (err)
-                    return reject(err);
-                accept(result);
-            });
         });
     }
 };

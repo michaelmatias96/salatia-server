@@ -19,6 +19,8 @@ app.use(cors({
             callback('Bad Request', false);
         }
 
+        if (origin == null)
+            ok();
         if (origin.startsWith("http://localhost:"))
             ok();
         else if (origin.startsWith("file://"))

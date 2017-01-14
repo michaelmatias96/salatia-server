@@ -27,9 +27,13 @@ module.exports = {
         });
     },
     getObjectId(id) {
-        mealDetailsModel.findOne({id}).exec(function(err, result) {
-            if (err) console.log(err);
-            accept(mongoose.Types.ObjectId(result._id.toString()))
-        })
+        return new Promise((accept, reject) => {
+            mealDetailsModel.findOne({id}).exec(function (err, result) {
+                if (err)
+                    return reject(err);
+                
+                accept(mongoose.Types.ObjectId(result._id.toString()))
+            });
+        });
     }
 };
