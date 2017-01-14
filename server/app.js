@@ -165,9 +165,7 @@ app.get('/menuDetails/', authCheck, function (request, response) {
 
 
 //post userID and get order with all the display names
-app.post('/order', function(req,res){
-
-
+app.post('/orders', function(req,res){
     usersModel.findOne({'auth0ID':req.body.userID} , function(err, user) {
             if (!user) return res.end("no found user");
             console.log(user);

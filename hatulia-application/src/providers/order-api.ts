@@ -16,9 +16,6 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class OrderAPI {
   private order: any;
-  private authid: any;
-  private user: any;
-  //Alert when there is a change
   orderChanged = new EventEmitter<any>();
 
 
@@ -32,16 +29,7 @@ export class OrderAPI {
 
 
   getDataForUser(){
-    this.user = this.authService.user;
-    this.authid = this.user.user_id;
-
-
-    console.log(this.authid);
-
-
-    return this.http.post('http://localhost:8080/order',{
-      'userID' : this.authid
-    }).map((response : Response) => response.json()).subscribe(
+    return this.http.get('http://localhost:4338/order').map((response : Response) => response.json()).subscribe(
       (data : any) =>
       {
         this.order = data;
