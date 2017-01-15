@@ -88,14 +88,10 @@ app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
 });
 
 app.get('/orders', authCheckMiddlware, function(req,res){
-    ordersModel.findOne({'userId': req.user.sub})
-        .populate('extras', 'displayName imageSrc')
-        .populate('mealType', 'displayName imageSrc')
-        .populate('meatType', 'displayName imageSrc')
-        .exec(function(err, orders){
-            console.log(orders);
-            res.json(orders);
-        });
+    var userId = req.user.sub;
+    db.orders.getUserOrders(userId)
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
 });
 
 app.get('/mealTest', function(req, res) {
