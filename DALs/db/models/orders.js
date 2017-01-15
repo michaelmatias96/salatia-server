@@ -4,11 +4,19 @@
 const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
-
 const ordersSchema = new Schema({
-    mealId: Schema.Types.ObjectId,
-    meatId: Schema.Types.ObjectId,
-    extras: [Schema.Types.ObjectId],
+    mealId: {
+        type: Schema.Types.ObjectId,
+        ref: 'mealdetails'
+    },
+    meatId: {
+        type: Schema.Types.ObjectId,
+        ref: 'meatdetails'
+    },
+    extras: [{
+        type: Schema.Types.ObjectId,
+        ref: 'extrasdetails'
+    }],
     userId: String,
     status: {type: String, default: config.newOrderDefaultStatus},
     creationTime: {type: Date, default: Date.now()}
@@ -31,8 +39,8 @@ module.exports = {
         return new Promise((accept, reject) => {
             ordersModel.find({'userId': userId})
                 .populate('extras', 'displayName imageSrc')
-                .populate('mealType', 'displayName imageSrc')
-                .populate('meatType', 'displayName imageSrc')
+                .populate('mealId', 'displayName imageSrc')
+                .populate('meatId', 'displayName imageSrc')
                 .exec(function(err, result){
                     if (err)
                         return reject(err);
