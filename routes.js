@@ -37,10 +37,6 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
 
-    var extrasObjectIds;
-    var meatObjectId;
-    var mealObjectId;
-
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
             db.meatDetails.getObjectId(meatId),
