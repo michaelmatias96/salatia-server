@@ -26,10 +26,30 @@ app.use(cors({
             ok();
         else if (origin == "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop")
             ok();
+        else if (origin == "chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo")
+            ok();
         else
+
             notAuthorized();
     }
 }));
+
+var io = require('socket.io').listen(server);
+var newstate;
+
+io.on('connection', function (socket) {
+
+    console.log('user connected');
+
+
+
+    socket.on('newState', function (data) {
+        newstate = data;
+        updateUser(newstate);
+    });
+});
+
+
 
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var userId = request.user.sub;
@@ -40,6 +60,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var extrasObjectIds;
     var meatObjectId;
     var mealObjectId;
+    var order;
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
@@ -48,10 +69,12 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         ])
         .then(results => {
             let [extrasObjectIds, meatObjectId, mealObjectId] = results;
-            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId);
+            return order = db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId);
         })
         .then(results => {
             response.send({success : true});
+            io.emit('neworder', order);
+
         })
         .catch(err => {
             response.send({success: false});
