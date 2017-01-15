@@ -27,6 +27,20 @@ module.exports = {
             });
         });
     },
+    getUserOrders(userId) {
+        return new Promise((accept, reject) => {
+            ordersModel.find({'userId': userId})
+                .populate('extras', 'displayName imageSrc')
+                .populate('mealType', 'displayName imageSrc')
+                .populate('meatType', 'displayName imageSrc')
+                .exec(function(err, result){
+                    if (err)
+                        return reject(err);
+
+                    accept(result);
+                });
+        })
+    },
     createOrder(mealId, meatId, extrasIds, userId) {
         return new Promise((accept, reject) => {
             var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId, creationTime: new Date().toISOString()});
