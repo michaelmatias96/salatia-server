@@ -6,6 +6,7 @@ const {Schema} = mongoose;
 
 
 const meatDetailsSchema = new Schema({
+    id: String,
     name: String,
     displayName: String,
     comments: String,
@@ -27,7 +28,7 @@ module.exports = {
     },
     getObjectId(id) {
         return new Promise((accept, reject) => {
-            meatDetailsModel.findOne({'id': id}).exec(function (err, result) {
+            meatDetailsModel.findOne({id}).exec(function (err, result) {
                 if (err)
                     return reject(err);
 
