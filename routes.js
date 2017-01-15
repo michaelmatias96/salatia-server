@@ -26,10 +26,30 @@ app.use(cors({
             ok();
         else if (origin == "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop")
             ok();
+        else if (origin == "chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo")
+            ok();
         else
+
             notAuthorized();
     }
 }));
+
+var io = require('socket.io').listen(server);
+var newstate;
+
+io.on('connection', function (socket) {
+
+    console.log('user connected');
+
+
+
+    socket.on('newState', function (data) {
+        newstate = data;
+        updateUser(newstate);
+    });
+});
+
+
 
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var userId = request.user.sub;
@@ -40,6 +60,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var extrasObjectIds;
     var meatObjectId;
     var mealObjectId;
+    var order;
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
@@ -52,6 +73,8 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         })
         .then(results => {
             response.send({success : true});
+            io.emit('neworder');
+
         })
         .catch(err => {
             response.send({success: false});
@@ -90,6 +113,12 @@ app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
 app.get('/orders', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
     db.orders.getUserOrders(userId)
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
+});
+
+app.get('/getAllOrders', function(req,res){
+    db.orders.getAll()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
