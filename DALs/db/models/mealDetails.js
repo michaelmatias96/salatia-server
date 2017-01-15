@@ -6,6 +6,7 @@ const {Schema} = mongoose;
 
 
 const mealDetailsSchema = new Schema({
+    id: String,
     name: String,
     displayName: String,
     comments: String,
