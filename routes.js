@@ -69,11 +69,11 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         ])
         .then(results => {
             let [extrasObjectIds, meatObjectId, mealObjectId] = results;
-            return order = db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId);
+            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId);
         })
         .then(results => {
             response.send({success : true});
-            io.emit('neworder', order);
+            io.emit('neworder');
 
         })
         .catch(err => {
@@ -113,6 +113,12 @@ app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
 app.get('/orders', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
     db.orders.getUserOrders(userId)
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
+});
+
+app.get('/getAllOrders', function(req,res){
+    db.orders.getAll()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
