@@ -57,11 +57,6 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
 
-    var extrasObjectIds;
-    var meatObjectId;
-    var mealObjectId;
-    var order;
-
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
             db.meatDetails.getObjectId(meatId),
@@ -110,7 +105,7 @@ app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
         });
 });
 
-app.get('/orders', authCheckMiddlware, function(req,res){
+app.get('/userOrders', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
     db.orders.getUserOrders(userId)
         .then(result => res.send(result))
