@@ -83,7 +83,7 @@ app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
         });
 });
 
-app.get('/orders', authCheckMiddlware, function(req,res){
+app.get('/userOrders', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
     db.orders.getUserOrders(userId)
         .then(result => res.send(result))
