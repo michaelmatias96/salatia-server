@@ -18,6 +18,8 @@ const ordersSchema = new Schema({
         ref: 'extrasdetails'
     }],
     userId: String,
+    userName: String,
+    userPic: String,
     status: {type: String, default: config.newOrderDefaultStatus},
     creationTime: {type: Date, default: Date.now()}
 });
@@ -27,11 +29,14 @@ const ordersModel = mongoose.model('orders', ordersSchema);
 module.exports = {
     getAll() {
         return new Promise((accept, reject) => {
-            ordersModel.find({}, function (err, data) {
+            ordersModel.find({}) .populate('extras', 'displayName imageSrc')
+                .populate('mealId', 'displayName imageSrc')
+                .populate('meatId', 'displayName imageSrc')
+                .exec(function(err, result){
                 if (err)
                     return reject(err);
 
-                accept(data);
+                accept(result);
             });
         });
     },
@@ -49,9 +54,23 @@ module.exports = {
                 });
         })
     },
-    createOrder(mealId, meatId, extrasIds, userId) {
+    getOrderById(id) {
         return new Promise((accept, reject) => {
-            var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId, creationTime: new Date().toISOString()});
+            ordersModel.find({'_id': id})
+                .populate('extras', 'displayName imageSrc')
+                .populate('mealId', 'displayName imageSrc')
+                .populate('meatId', 'displayName imageSrc')
+                .exec(function(err, result){
+                    if (err)
+                        return reject(err);
+
+                    accept(result);
+                });
+        })
+    },
+    createOrder(mealId, meatId, extrasIds, userId, userName, userPic) {
+        return new Promise((accept, reject) => {
+            var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId,userName: userName, userPic: userPic, creationTime: new Date().toISOString()});
             order.save(function(err, result) {
                 if (err)
                     return reject(err);
