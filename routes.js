@@ -53,14 +53,16 @@ io.on('connection', function (socket) {
 
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var userId = request.user.sub;
+    console.log(request.user);
+   if(request.user.name!=null) var userName = request.user.name;
+    if(request.user.picture_large!=null) var userPic = request.user.picture_large;
+
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
 
-    var extrasObjectIds;
-    var meatObjectId;
-    var mealObjectId;
-    var order;
+
+
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
@@ -69,7 +71,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         ])
         .then(results => {
             let [extrasObjectIds, meatObjectId, mealObjectId] = results;
-            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId);
+            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId, userName, userPic);
         })
         .then(results => {
             response.send({success : true});
@@ -110,9 +112,17 @@ app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
         });
 });
 
-app.get('/orders', authCheckMiddlware, function(req,res){
+app.get('/userOrders', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
     db.orders.getUserOrders(userId)
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
+});
+
+
+app.get('/getOrder/:id', function(req,res){
+    var id = req.param('id');
+    db.orders.getOrderById(id)
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
