@@ -1,0 +1,34 @@
+image: ruby:latest
+
+stages:
+  - build
+  - deploy
+
+
+build:
+  stage: build
+  script:
+    - echo Done
+
+deploy-heroku-prod:
+  stage: deploy
+  environment: heroku production
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=hatulia-app-api --api-key=$HEROKU_PRODUCTION_API_KEY
+  only:
+    - deployment-heroku-prod
+
+deploy-heroku-integ:
+  stage: deploy
+  environment: heroku integration
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=hatulia-app-api-integ --api-key=$HEROKU_INTEGRATION_API_KEY
+  only:
+    - deployment-heroku-integ
+
