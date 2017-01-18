@@ -120,7 +120,7 @@ app.get('/userOrders', authCheckMiddlware, function(req,res){
 
 
 app.get('/getOrder/:id', function(req,res){
-    var id = req.param('id');
+    var id = req.params.id;
     db.orders.getOrderById(id)
         .then(result => res.send(result))
         .catch(err => res.send(err));
