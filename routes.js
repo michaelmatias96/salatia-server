@@ -74,7 +74,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         })
         .then(results => {
             response.send({success : true});
-            io.emit('neworder');
+            io.emit(config.emitEvent);
 
         })
         .catch(err => {
@@ -120,28 +120,30 @@ app.get('/userOrders', authCheckMiddlware, function(req,res){
 
 
 app.get('/getOrder/:id', function(req,res){
-    var id = req.param('id');
-    db.orders.getOrderById(id)
+    var orderId = req.param('id');
+    db.orders.getOrderById(orderId)
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
 
 
-app.post('/changeStatus', function(req,res){
+app.post('/changeOrderStatus', function(req,res){
     var id = req.body.id;
-    var status = req.body.status;
-    db.orders.changeStatus(id, status)
-        .then(result => {res.send(result);
-            io.emit('neworder')})
+    var orderStatus = req.body.status;
+    db.orders.changeStatus(id, orderStatus)
+        .then(result => {
+            res.send(result);
+            io.emit('neworder')
+        })
         .catch(err => res.send(err));
 });
 
-app.get('/getAllOrders', function(req,res){
+app.get('/getAll', function(req,res){
     db.orders.getAll()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
-app.get('/getFinishOrders', function(req,res){
+app.get('/getCompleted', function(req,res){
     db.orders.getFinish()
         .then(result => res.send(result))
         .catch(err => res.send(err));

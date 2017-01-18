@@ -29,7 +29,9 @@ const ordersModel = mongoose.model('orders', ordersSchema);
 module.exports = {
     getAll() {
         return new Promise((accept, reject) => {
-            ordersModel.find({ $or:[ {'status':'progress'}, {'status':'new'} ]}).sort([['creationTime', 'descending']]).populate('extras', 'displayName imageSrc')
+            ordersModel.find({ $or:[ {'status':'progress'}, {'status':'new'} ]})
+                .sort([['creationTime', 'descending']])
+                .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
                 .exec(function(err, result){
@@ -94,7 +96,6 @@ module.exports = {
     },
     changeStatus(id, status) {
         return new Promise((accept, reject) => {
-
             ordersModel.findOneAndUpdate({'_id': id}, {status: status}, function(err, doc){
                 if (err)
                     return reject(err);
