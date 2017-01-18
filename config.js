@@ -6,5 +6,5 @@ module.exports = {
     auth0ClientId: "m1NOCEkfL6jZYZLBjvgbzaIFaKg0bK18",
     mongoDbConnectionString: "mongodb://localhost/hatuliaDB",
     newOrderDefaultStatus: "new",
-    emitEvent: "neworder"
+    socketNewOrderMsg: "neworder"
 };

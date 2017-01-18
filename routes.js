@@ -74,7 +74,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         })
         .then(results => {
             response.send({success : true});
-            io.emit(config.emitEvent);
+            io.emit(config.socketNewOrderMsg);
 
         })
         .catch(err => {
@@ -138,13 +138,13 @@ app.post('/changeOrderStatus', function(req,res){
         .catch(err => res.send(err));
 });
 
-app.get('/getAll', function(req,res){
-    db.orders.getAll()
+app.get('/getProgressAndNewOrders', function(req,res){
+    db.orders.getProgressAndNewOrders()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
 app.get('/getCompleted', function(req,res){
-    db.orders.getFinish()
+    db.orders.getCompletedOrders()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });

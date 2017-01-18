@@ -27,7 +27,7 @@ const ordersModel = mongoose.model('orders', ordersSchema);
 
 
 module.exports = {
-    getAll() {
+    getProgressAndNewOrders() {
         return new Promise((accept, reject) => {
             ordersModel.find({ $or:[ {'status':'progress'}, {'status':'new'} ]})
                 .sort([['creationTime', 'descending']])
@@ -42,9 +42,11 @@ module.exports = {
             });
         });
     },
-    getFinish() {
+    getCompletedOrders() {
         return new Promise((accept, reject) => {
-            ordersModel.find({'status': 'finish'}).sort([['creationTime', 'descending']]).populate('extras', 'displayName imageSrc')
+            ordersModel.find({'status': 'finish'})
+                .sort([['creationTime', 'descending']])
+                .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
                 .exec(function(err, result){
@@ -57,7 +59,8 @@ module.exports = {
     },
     getUserOrders(userId) {
         return new Promise((accept, reject) => {
-            ordersModel.find({'userId': userId}).sort([['creationTime', 'descending']])
+            ordersModel.find({'userId': userId})
+                .sort([['creationTime', 'descending']])
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
