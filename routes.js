@@ -29,7 +29,6 @@ app.use(cors({
         else if (origin == "chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo")
             ok();
         else
-
             notAuthorized();
     }
 }));
@@ -127,8 +126,23 @@ app.get('/getOrder/:id', function(req,res){
         .catch(err => res.send(err));
 });
 
+
+app.post('/changeStatus', function(req,res){
+    var id = req.body.id;
+    var status = req.body.status;
+    db.orders.changeStatus(id, status)
+        .then(result => {res.send(result);
+            io.emit('neworder')})
+        .catch(err => res.send(err));
+});
+
 app.get('/getAllOrders', function(req,res){
     db.orders.getAll()
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
+});
+app.get('/getFinishOrders', function(req,res){
+    db.orders.getFinish()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });

@@ -20,7 +20,7 @@ const ordersSchema = new Schema({
     userId: String,
     userName: String,
     userPic: String,
-    status: {type: String, default: config.newOrderDefaultStatus},
+    status: {type: String, default: "new"},
     creationTime: {type: Date, default: Date.now()}
 });
 const ordersModel = mongoose.model('orders', ordersSchema);
@@ -29,7 +29,7 @@ const ordersModel = mongoose.model('orders', ordersSchema);
 module.exports = {
     getAll() {
         return new Promise((accept, reject) => {
-            ordersModel.find({}) .populate('extras', 'displayName imageSrc')
+            ordersModel.find({ $or:[ {'status':'progress'}, {'status':'new'} ]}).sort([['creationTime', 'descending']]).populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
                 .exec(function(err, result){
@@ -40,9 +40,22 @@ module.exports = {
             });
         });
     },
+    getFinish() {
+        return new Promise((accept, reject) => {
+            ordersModel.find({'status': 'finish'}).sort([['creationTime', 'descending']]).populate('extras', 'displayName imageSrc')
+                .populate('mealId', 'displayName imageSrc')
+                .populate('meatId', 'displayName imageSrc')
+                .exec(function(err, result){
+                    if (err)
+                        return reject(err);
+
+                    accept(result);
+                });
+        });
+    },
     getUserOrders(userId) {
         return new Promise((accept, reject) => {
-            ordersModel.find({'userId': userId})
+            ordersModel.find({'userId': userId}).sort([['creationTime', 'descending']])
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
@@ -77,6 +90,21 @@ module.exports = {
 
                 accept(result);
             });
+        })
+    },
+    changeStatus(id, status) {
+        return new Promise((accept, reject) => {
+
+            ordersModel.findOneAndUpdate({'_id': id}, {status: status}, function(err, doc){
+                if (err)
+                    return reject(err);
+                accept(doc);
+            });
+
+
+
+
+
         })
     }
 };
