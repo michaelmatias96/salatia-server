@@ -29,7 +29,6 @@ app.use(cors({
         else if (origin == "chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo")
             ok();
         else
-
             notAuthorized();
     }
 }));
@@ -75,7 +74,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         })
         .then(results => {
             response.send({success : true});
-            io.emit('neworder');
+            io.emit(config.socketNewOrderMsg);
 
         })
         .catch(err => {
@@ -121,14 +120,31 @@ app.get('/userOrders', authCheckMiddlware, function(req,res){
 
 
 app.get('/getOrder/:id', function(req,res){
-    var id = req.param('id');
-    db.orders.getOrderById(id)
+    var orderId = req.params.id;
+    db.orders.getOrderById(orderId)
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
 
-app.get('/getAllOrders', function(req,res){
-    db.orders.getAll()
+
+app.post('/changeOrderStatus', function(req,res){
+    var id = req.body.id;
+    var orderStatus = req.body.status;
+    db.orders.changeStatus(id, orderStatus)
+        .then(result => {
+            res.send(result);
+            io.emit('neworder')
+        })
+        .catch(err => res.send(err));
+});
+
+app.get('/getProgressAndNewOrders', function(req,res){
+    db.orders.getProgressAndNewOrders()
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
+});
+app.get('/getCompleted', function(req,res){
+    db.orders.getCompletedOrders()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
