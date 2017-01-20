@@ -7,7 +7,7 @@ module.exports = {
     },
     port: process.env.PORT || 4338,
     cors: {
-        mobileApp: "https://hatulia-app-integ.herokuapp.com/",
-        admin: "https://hatulia-app-admin-integ.herokuapp.com/orders"
+        mobileApp: "https://hatulia-app-integ.herokuapp.com",
+        admin: "https://hatulia-app-admin-integ.herokuapp.com"
     }
 };
