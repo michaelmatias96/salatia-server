@@ -15,7 +15,7 @@ deploy-heroku-prod:
   environment: heroku production
   script:
     - apt-get update -qy
-    - apt-get install -y ruby-dev
+    - apt-get install -y ruby-dev rubygems
     - gem install dpl
     - dpl --provider=heroku --app=hatulia-app-api --api-key=$HEROKU_PRODUCTION_API_KEY
   only:
@@ -26,7 +26,7 @@ deploy-heroku-integ:
   environment: heroku integration
   script:
     - apt-get update -qy
-    - apt-get install -y ruby-dev
+    - apt-get install -y ruby-dev rubygems
     - gem install dpl
     - dpl --provider=heroku --app=hatulia-app-api-integ --api-key=$HEROKU_INTEGRATION_API_KEY
   only:
