@@ -24,6 +24,8 @@ app.use(cors({
             ok();
         else if (origin.startsWith("file://"))
             ok();
+        else if (origin.startsWith("https://hatulia-app-admin-integ.herokuapp.com"))
+            ok();
         else if (origin == "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop")
             ok();
         else if (origin == "chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo")
