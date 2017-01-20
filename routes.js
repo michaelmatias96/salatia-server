@@ -20,7 +20,9 @@ app.use(cors({
 
         if (origin == null)
             ok();
-        else if (origin.startsWith("http://localhost:"))
+        else if (origin.startsWith(config.cors.mobileApp))
+            ok();
+        else if (origin.startsWith(config.cors.admin))
             ok();
         else if (origin.startsWith("file://"))
             ok();
@@ -82,7 +84,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         });
 });
 
-app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
+app.get('/menuDetails', authCheckMiddlware, function (req, res) {
     Promise.all([
             db.mealDetails.getAll(),
             db.extrasDetails.getAll(),
@@ -109,6 +111,13 @@ app.get('/menuDetails', /*authCheckMiddlware, */function (req, res) {
                 }
             });
         });
+});
+
+app.get('/orderDetails', authCheckMiddlware, function (req, res) {
+    var currentOrder = req.body;
+    db.orders.getOrderDetails(currentOrder)
+        .then(result => res.send(result))
+        .catch(err => res.send(err))
 });
 
 app.get('/userOrders', authCheckMiddlware, function(req,res){

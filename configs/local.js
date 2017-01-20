@@ -4,5 +4,9 @@
 module.exports = {
     db: {
         connectionString: "mongodb://localhost/hatuliaDB"
+    },
+    cors: {
+        mobileApp: "http://localhost:",
+        admin: "http://localhost:"
     }
 };
