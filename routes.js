@@ -31,7 +31,6 @@ app.use(cors({
         else if (origin == "chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo")
             ok();
         else
-
             notAuthorized();
     }
 }));
@@ -55,9 +54,16 @@ io.on('connection', function (socket) {
 
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var userId = request.user.sub;
+    console.log(request.user);
+   if(request.user.name!=null) var userName = request.user.name;
+    if(request.user.picture_large!=null) var userPic = request.user.picture_large;
+
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
+
+
+
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
@@ -66,11 +72,11 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         ])
         .then(results => {
             let [extrasObjectIds, meatObjectId, mealObjectId] = results;
-            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId);
+            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId, userName, userPic);
         })
         .then(results => {
             response.send({success : true});
-            io.emit('neworder');
+            io.emit(config.socketNewOrderMsg);
 
         })
         .catch(err => {
@@ -121,8 +127,33 @@ app.get('/userOrders', authCheckMiddlware, function(req,res){
         .catch(err => res.send(err));
 });
 
-app.get('/getAllOrders', function(req,res){
-    db.orders.getAll()
+
+app.get('/getOrder/:id', function(req,res){
+    var orderId = req.params.id;
+    db.orders.getOrderById(orderId)
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
+});
+
+
+app.post('/changeOrderStatus', function(req,res){
+    var id = req.body.id;
+    var orderStatus = req.body.status;
+    db.orders.changeStatus(id, orderStatus)
+        .then(result => {
+            res.send(result);
+            io.emit('neworder')
+        })
+        .catch(err => res.send(err));
+});
+
+app.get('/getProgressAndNewOrders', function(req,res){
+    db.orders.getProgressAndNewOrders()
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
+});
+app.get('/getCompleted', function(req,res){
+    db.orders.getCompletedOrders()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
