@@ -158,7 +158,7 @@ app.get('/getCompleted', authCheckMiddlware, function(req,res){
         .catch(err => res.send(err));
 });
 
-app.get('/mealTest', function(req, res) {
+app.get('/mealTest', authCheckMiddlware, function(req, res) {
     log.log('getting meal test');
     db.mealDetails.getAll()
         .then(result => res.send(result))
