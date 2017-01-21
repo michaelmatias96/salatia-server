@@ -26,11 +26,11 @@ module.exports = {
             });
         });
     },
-    getObjectIds(idList) {
+    getObjectIds(ids) {
         return new Promise((accept, reject) => {
             extrasDetailsModel
-                .find({id: { $in : idList}})
-                .exec(function(err, result) {
+                .find({id: {$in: ids}})
+                .exec(function (err, result) {
                     if (err)
                         return reject(err);
 
@@ -40,5 +40,25 @@ module.exports = {
                     accept(result);
                 });
         });
+    },
+    getOne(id) {
+        return new Promise((accept, reject) => {
+            extrasDetailsModel.findOne({id}).exec(function (err, result) {
+                if (err)
+                    return reject(err);
+
+                accept(result)
+            })
+        })
+    },
+    getFew(ids) {
+        return new Promise((accept, reject) => {
+            extrasDetailsModel.find({ id : { $in : ids }}).exec(function(err, result) {
+                if (err)
+                    return reject(err);
+
+                accept(result);
+            })
+        })
     }
 };
