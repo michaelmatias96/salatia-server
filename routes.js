@@ -155,7 +155,7 @@ app.get('/getOrder/:id', authCheckMiddlware, function(req,res){
 });
 
 
-app.post('/changeOrderStatus', authCheckMiddlware, function(req,res){
+app.post('/changeOrderStatus', function(req,res){
     var id = req.body.id;
     var orderStatus = req.body.status;
     db.orders.changeStatus(id, orderStatus)
@@ -166,12 +166,12 @@ app.post('/changeOrderStatus', authCheckMiddlware, function(req,res){
         .catch(err => res.send(err));
 });
 
-app.get('/getProgressAndNewOrders', authCheckMiddlware, function(req,res){
+app.get('/getProgressAndNewOrders', function(req,res){
     db.orders.getProgressAndNewOrders()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
-app.get('/getCompleted', authCheckMiddlware, function(req,res){
+app.get('/getCompleted', function(req,res){
     db.orders.getCompletedOrders()
         .then(result => res.send(result))
         .catch(err => res.send(err));
