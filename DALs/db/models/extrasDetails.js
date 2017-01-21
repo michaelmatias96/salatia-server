@@ -26,11 +26,11 @@ module.exports = {
             });
         });
     },
-    getObjectIds(idList) {
-       let arryIdList = Array.from(idList);
+    getObjectIds(idsList) {
+       let arryIdsList = Array.from(idsList);
         return new Promise((accept, reject) => {
                 extrasDetailsModel
-                    .find({id: {$in: arryIdList}})
+                    .find({id: {$in: arryIdsList}})
                     .exec(function (err, result) {
                         if (err)
                             return reject(err);
