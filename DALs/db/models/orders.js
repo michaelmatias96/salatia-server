@@ -86,6 +86,7 @@ module.exports = {
     getOrderById(id) {
         return new Promise((accept, reject) => {
             ordersModel.find({'_id': id})
+                .populate('userId')
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
