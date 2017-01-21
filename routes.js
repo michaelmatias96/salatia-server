@@ -42,6 +42,11 @@ var newstate;
 
 io.on('connection', function (socket) {
     console.log('user connected');
+
+    socket.on('newState', function (data) {
+        newstate = data;
+        updateUser(newstate);
+    });
 });
 
 
@@ -51,7 +56,6 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
-
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
@@ -114,11 +118,35 @@ app.get('/menuDetails', authCheckMiddlware, function (req, res) {
         });
 });
 
-app.get('/orderDetails', authCheckMiddlware, function (req, res) {
+app.post('/orderDetails', authCheckMiddlware, function (req, res) {
     var currentOrder = req.body;
-    db.orders.getOrderDetails(currentOrder)
-        .then(result => res.send(result))
-        .catch(err => res.send(err))
+
+    Promise.all([
+            db.mealDetails.getOne(currentOrder.mealType),
+            db.extrasDetails.getFew(currentOrder.extras),
+            db.meatDetails.getOne(currentOrder.meatType)
+        ])
+        .then(results => {
+            let [mealDetails, extrasDetails, meatDetails] = results;
+
+            res.send({
+                status: "ok",
+                content: {
+                    mealDetails,
+                    extrasDetails,
+                    meatDetails
+                }
+            });
+        })
+        .catch(err => {
+            res.send({
+                status: "error",
+                content: {
+                    title: "",
+                    message: ""
+                }
+            });
+        });
 });
 
 app.get('/userOrders', authCheckMiddlware, function(req,res){
