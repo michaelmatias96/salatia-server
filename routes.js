@@ -81,7 +81,7 @@ app.get('/userLogin', authCheckMiddlware, function(req,res){
     if(req.user.picture_large!=null) var userPic = req.user.picture_large;
 
     db.userDetails.createUserIfNotExist(userId, userName, userPic)
-        .then(result => res.send(result))
+        .then(result => res.send({status: "login"}))
         .catch(err => res.send(err));
 });
 
@@ -143,7 +143,7 @@ app.post('/changeOrderStatus', function(req,res){
     db.orders.changeStatus(id, orderStatus)
         .then(result => {
             res.send(result);
-            io.emit('neworder')
+            io.emit(config.socketNewOrderMsg);
         })
         .catch(err => res.send(err));
 });
