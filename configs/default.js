@@ -14,5 +14,7 @@ module.exports = {
     cors: {
         mobileApp: "",
         admin: ""
-    }
+    },
+    newOrderDefaultStatus: "new",
+    socketNewOrderMsg: "neworder"
 };
