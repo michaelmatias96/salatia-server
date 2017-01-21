@@ -2,6 +2,8 @@
  * Created by michaelmatias on 1/14/17.
  */
 const mongoose = require("mongoose");
+const db = require("../../../DALs/db/db");
+
 const {Schema} = mongoose;
 
 const ordersSchema = new Schema({
@@ -17,9 +19,10 @@ const ordersSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'extrasdetails'
     }],
-    userId: String,
-    userName: String,
-    userPic: String,
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'userdetails'
+    },
     status: {type: String, default: "new"},
     creationTime: {type: Date, default: Date.now()}
 });
@@ -59,18 +62,29 @@ module.exports = {
     },
     getUserOrders(userId) {
         return new Promise((accept, reject) => {
-            ordersModel.find({'userId': userId})
-                .sort([['creationTime', 'descending']])
-                .populate('extras', 'displayName imageSrc')
-                .populate('mealId', 'displayName imageSrc')
-                .populate('meatId', 'displayName imageSrc')
-                .exec(function(err, result){
-                    if (err)
-                        return reject(err);
+            console.log("dfdf");
 
-                    accept(result);
-                });
-        })
+            db.userDetails.getObjectId(userId)
+            .then(result => {
+
+                ordersModel.find({'userId': result})
+                    .sort([['creationTime', 'descending']])
+                    .populate('extras', 'displayName imageSrc')
+                    .populate('mealId', 'displayName imageSrc')
+                    .populate('meatId', 'displayName imageSrc')
+                    .exec(function(err, result){
+                        if (err)
+                            return reject(err);
+
+                        accept(result);
+                    });
+            })
+            .catch(err => {
+                return reject(err);
+            })
+
+            });
+
     },
     getOrderById(id) {
         return new Promise((accept, reject) => {
@@ -86,9 +100,9 @@ module.exports = {
                 });
         })
     },
-    createOrder(mealId, meatId, extrasIds, userId, userName, userPic) {
+    createOrder(mealId, meatId, extrasIds, userId) {
         return new Promise((accept, reject) => {
-            var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId,userName: userName, userPic: userPic, creationTime: new Date().toISOString()});
+            var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId, creationTime: new Date().toISOString()});
             order.save(function(err, result) {
                 if (err)
                     return reject(err);

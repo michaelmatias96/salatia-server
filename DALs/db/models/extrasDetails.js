@@ -27,18 +27,19 @@ module.exports = {
         });
     },
     getObjectIds(idList) {
+       let arryIdList = Array.from(idList);
         return new Promise((accept, reject) => {
-            extrasDetailsModel
-                .find({id: { $in : idList}})
-                .exec(function(err, result) {
-                    if (err)
-                        return reject(err);
+                extrasDetailsModel
+                    .find({id: {$in: arryIdList}})
+                    .exec(function (err, result) {
+                        if (err)
+                            return reject(err);
 
-                    result = result.map(function (document) {
-                        return mongoose.Types.ObjectId(document._id.toString());
+                        result = result.map(function (document) {
+                            return mongoose.Types.ObjectId(document._id.toString());
+                        });
+                        accept(result);
                     });
-                    accept(result);
-                });
         });
     },
     getOne(id) {
