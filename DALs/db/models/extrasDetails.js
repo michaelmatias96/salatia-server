@@ -26,20 +26,19 @@ module.exports = {
             });
         });
     },
-    getObjectIds(idsList) {
-       let arryIdsList = Array.from(idsList);
+    getObjectIds(ids) {
         return new Promise((accept, reject) => {
-                extrasDetailsModel
-                    .find({id: {$in: arryIdsList}})
-                    .exec(function (err, result) {
-                        if (err)
-                            return reject(err);
+            extrasDetailsModel
+                .find({id: {$in: ids}})
+                .exec(function (err, result) {
+                    if (err)
+                        return reject(err);
 
-                        result = result.map(function (document) {
-                            return mongoose.Types.ObjectId(document._id.toString());
-                        });
-                        accept(result);
+                    result = result.map(function (document) {
+                        return mongoose.Types.ObjectId(document._id.toString());
                     });
+                    accept(result);
+                });
         });
     },
     getOne(id) {
