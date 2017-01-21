@@ -46,7 +46,7 @@ module.exports = {
         return new Promise((accept, reject) => {
             userDetailsModel.findOne({id}).exec(function (err, result) {
                 if (result == null)
-                    return reject(err);
+                    return accept("");
                 
                 accept(mongoose.Types.ObjectId(result._id.toString()))
             });

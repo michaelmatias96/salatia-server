@@ -56,6 +56,8 @@ io.on('connection', function (socket) {
 
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var userId = request.user.sub;
+    var results = [];
+    var extrasObjectIds, meatObjectId, mealObjectId, userObjectId;
     console.log(request.user);
    if(request.user.name!=null) var userName = request.user.name;
     if(request.user.picture_large!=null) var userPic = request.user.picture_large;
@@ -73,11 +75,14 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
             db.userDetails.getObjectId(userId)
 
         ])
-        .catch(err => {
-            return db.userDetails.createUser(userId, userName, userPic);
+        .then(results =>{
+            [extrasObjectIds, meatObjectId, mealObjectId,userObjectId] = results;
+            if(userObjectId == ""){
+                return db.userDetails.createUser(userId, userName, userPic);
+            }
         })
-        .then(results => {
-            let [extrasObjectIds, meatObjectId, mealObjectId, userObjectId] = results;
+        .then(result => {
+            if (result != null) userObjectId = result;
             return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId);
         })
         .then(results => {
