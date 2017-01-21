@@ -9,5 +9,12 @@ module.exports = {
             secretKey: "nDVMJ8hlAoKt4L_AV3XwT4gzBrKkyVBAcuyP7iX_k8SNFrwQQbqcFz7JopvUj-Tc",
             clientId: "m1NOCEkfL6jZYZLBjvgbzaIFaKg0bK18"
         }
-    }
+    },
+    defaultCreateOrderWaitingStatus: "waiting",
+    cors: {
+        mobileApp: "",
+        admin: ""
+    },
+    newOrderDefaultStatus: "new",
+    socketNewOrderMsg: "neworder"
 };
