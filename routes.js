@@ -26,6 +26,8 @@ app.use(cors({
             ok();
         else if (origin.startsWith("file://"))
             ok();
+        else if (origin.startsWith("https://hatulia-app-admin-integ.herokuapp.com"))
+            ok();
         else if (origin == "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop")
             ok();
         else if (origin == "chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo")
@@ -39,7 +41,6 @@ var io = require('socket.io').listen(server);
 var newstate;
 
 io.on('connection', function (socket) {
-
     console.log('user connected');
 
     socket.on('newState', function (data) {
@@ -51,23 +52,22 @@ io.on('connection', function (socket) {
 
 
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
-    var userId = request.user.sub;
-    console.log(request.user);
-   if(request.user.name!=null) var userName = request.user.name;
-    if(request.user.picture_large!=null) var userPic = request.user.picture_large;
-
+    var auth0Id = request.user.sub;
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
 
+
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
             db.meatDetails.getObjectId(meatId),
-            db.mealDetails.getObjectId(mealId)
+            db.mealDetails.getObjectId(mealId),
+            db.userDetails.getObjectId(auth0Id)
+
         ])
         .then(results => {
-            let [extrasObjectIds, meatObjectId, mealObjectId] = results;
-            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId, userName, userPic);
+            let [extrasObjectIds, meatObjectId, mealObjectId,userObjectId] = results;
+            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId);
         })
         .then(results => {
             response.send({success : true});
@@ -77,6 +77,17 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         .catch(err => {
             response.send({success: false});
         });
+});
+
+
+app.get('/userLogin', authCheckMiddlware, function(req,res){
+    var userId = req.user.sub;
+    if(req.user.name!=null) var userName = req.user.name;
+    if(req.user.picture_large!=null) var userPic = req.user.picture_large;
+
+    db.userDetails.createUserIfNotExist(userId, userName, userPic)
+        .then(result => res.send({status: "login"}))
+        .catch(err => res.send(err));
 });
 
 app.get('/menuDetails', authCheckMiddlware, function (req, res) {
@@ -140,14 +151,14 @@ app.post('/orderDetails', authCheckMiddlware, function (req, res) {
 });
 
 app.get('/userOrders', authCheckMiddlware, function(req,res){
-    var userId = req.user.sub;
-    db.orders.getUserOrders(userId)
-        .then(result => res.send(result))
-        .catch(err => res.send(err));
+    var auth0Id = req.user.sub;
+        db.orders.getUserOrders(auth0Id)
+            .then(result => res.send(result))
+            .catch(err => res.send(err));
 });
 
 
-app.get('/getOrder/:id', authCheckMiddlware, function(req,res){
+app.get('/getOrder/:id', function(req,res){
     var orderId = req.params.id;
     db.orders.getOrderById(orderId)
         .then(result => res.send(result))
@@ -161,7 +172,7 @@ app.post('/changeOrderStatus', function(req,res){
     db.orders.changeStatus(id, orderStatus)
         .then(result => {
             res.send(result);
-            io.emit('neworder')
+            io.emit(config.socketNewOrderMsg);
         })
         .catch(err => res.send(err));
 });
@@ -177,14 +188,14 @@ app.get('/getCompleted', function(req,res){
         .catch(err => res.send(err));
 });
 
-app.get('/mealTest', authCheckMiddlware, function(req, res) {
+app.get('/mealTest', function(req, res) {
     log.log('getting meal test');
     db.mealDetails.getAll()
         .then(result => res.send(result))
         .catch(err => res.send(err));
 });
 
-app.get('/', authCheckMiddlware, function(req, res) {
+app.get('/', function(req, res) {
     res.send("Hello world!");
 });
 
