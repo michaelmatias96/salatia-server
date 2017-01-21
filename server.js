@@ -13,9 +13,8 @@ const currentConfig = require("./currentConfig");
 global.config = require("./configs/default");
 Object.assign(global.config, require("./configs/" + currentConfig));
 
-
 global.app = express();
-app.listen(config.port, function() {
+global.server = app.listen(config.port, function() {
     console.info("Listening on", config.port);
 });
 
