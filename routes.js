@@ -59,20 +59,24 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     if(request.user.picture_large!=null) var userPic = request.user.picture_large;
 
     var extrasIds = request.body.extras;
+
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
-
-
 
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
             db.meatDetails.getObjectId(meatId),
-            db.mealDetails.getObjectId(mealId)
+            db.mealDetails.getObjectId(mealId),
+            db.userDetails.getObjectId(userId)
+
         ])
+        .catch(err => {
+            return db.userDetails.createUser(userId, userName, userPic);
+        })
         .then(results => {
-            let [extrasObjectIds, meatObjectId, mealObjectId] = results;
-            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId, userName, userPic);
+            let [extrasObjectIds, meatObjectId, mealObjectId, userObjectId] = results;
+            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId);
         })
         .then(results => {
             response.send({success : true});
