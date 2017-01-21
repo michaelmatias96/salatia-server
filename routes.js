@@ -56,9 +56,7 @@ io.on('connection', function (socket) {
 
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var userId = request.user.sub;
-    var results = [];
     var extrasObjectIds, meatObjectId, mealObjectId, userObjectId;
-    console.log(request.user);
    if(request.user.name!=null) var userName = request.user.name;
     if(request.user.picture_large!=null) var userPic = request.user.picture_large;
 
