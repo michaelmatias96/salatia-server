@@ -23,6 +23,7 @@ const ordersSchema = new Schema({
     status: {type: String, default: "new"},
     creationTime: {type: Date, default: Date.now()}
 });
+
 const ordersModel = mongoose.model('orders', ordersSchema);
 
 
@@ -42,6 +43,18 @@ module.exports = {
             });
         });
     },
+
+    getObjectId(id) {
+        return new Promise((accept, reject) => {
+            ordersModel.findOne({id}).exec(function (err, result) {
+                if (err)
+                    return reject(err);
+
+                accept(mongoose.Types.ObjectId(result._id.toString()))
+            });
+        });
+    },
+
     getCompletedOrders() {
         return new Promise((accept, reject) => {
             ordersModel.find({'status': 'finish'})
@@ -97,6 +110,19 @@ module.exports = {
             });
         })
     },
+
+    removeOrderById(id) {
+        return new Promise((accept, reject) => {
+            ordersModel.findOneAndRemove({'_id': id})
+                .exec(function(err, result){
+                    if (err)
+                        return reject(err);
+
+                    accept(result);
+                });
+        })
+    },
+
     changeStatus(id, status) {
         return new Promise((accept, reject) => {
             ordersModel.findOneAndUpdate({'_id': id}, {status: status}, function(err, doc){
@@ -105,9 +131,17 @@ module.exports = {
                 accept(doc);
             });
 
+        })
+    },
 
-
-
+    getOrderStatus(id)
+    {
+        return new Promise((accept, reject) => {
+            ordersModel.find({'_id': id}).exec(function(err, doc){
+                if (err)
+                    return reject(err);
+                accept(doc.status);
+            });
 
         })
     }
