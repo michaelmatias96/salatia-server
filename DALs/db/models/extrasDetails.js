@@ -21,7 +21,6 @@ module.exports = {
             extrasDetailsModel.find({}, function (err, data) {
                 if (err)
                     return reject(err);
-
                 accept(data);
             });
         });
@@ -33,7 +32,6 @@ module.exports = {
                 .exec(function (err, result) {
                     if (err)
                         return reject(err);
-
                     result = result.map(function (document) {
                         return mongoose.Types.ObjectId(document._id.toString());
                     });
@@ -46,7 +44,6 @@ module.exports = {
             extrasDetailsModel.findOne({id}).exec(function (err, result) {
                 if (err)
                     return reject(err);
-
                 accept(result)
             })
         })
@@ -56,7 +53,6 @@ module.exports = {
             extrasDetailsModel.find({ id : { $in : ids }}).exec(function(err, result) {
                 if (err)
                     return reject(err);
-
                 accept(result);
             })
         })
