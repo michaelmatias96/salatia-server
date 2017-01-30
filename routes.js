@@ -3,6 +3,7 @@ const bodyparser = require('body-parser');
 const db = require("./DALs/db/db");
 const cors = require("cors");
 const express = require("express");
+const moment = require('moment-timezone');
 
 app.use(bodyparser.urlencoded({'extended': 'true'}));// TODO: check if this is needed
 app.use(bodyparser.json());
@@ -56,6 +57,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
+    var pickupTime = moment(request.body.pickupTime).toDate();
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
@@ -66,7 +68,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         ])
         .then(results => {
             let [extrasObjectIds, meatObjectId, mealObjectId,userObjectId] = results;
-            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId);
+            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId, pickupTime);
         })
         .then(results => {
             response.send({success : true});
