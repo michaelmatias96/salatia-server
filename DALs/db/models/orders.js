@@ -24,6 +24,7 @@ const ordersSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'userdetails'
     },
+    pickupTime: {type: Date},
     status: {type: String, default: config.newOrderDefaultStatus},
     creationTime: {type: Date, default: Date.now()}
 });
@@ -98,9 +99,9 @@ module.exports = {
                 });
         })
     },
-    createOrder(mealId, meatId, extrasIds, userId) {
+    createOrder(mealId, meatId, extrasIds, userId, pickupTime) {
         return new Promise((accept, reject) => {
-            var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId, creationTime: new Date().toISOString()});
+            var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId, pickupTime: pickupTime, creationTime: new Date().toISOString()});
             order.save(function(err, result) {
                 if (err)
                     return reject(err);
