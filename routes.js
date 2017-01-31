@@ -173,7 +173,7 @@ app.post('/changeOrderStatus', function(req,res){
     db.orders.changeStatus(id, orderStatus)
         .then(result => {
             res.send(result);
-            io.emit(config.socketNewOrderMsg);
+            io.emit(config.socketChangeOrderMsg);
         })
         .catch(err => res.send(err));
 });

@@ -15,7 +15,6 @@ const mealDetailsSchema = new Schema({
 });
 const mealDetailsModel = mongoose.model('mealdetails', mealDetailsSchema);
 
-
 module.exports = {
     getAll() {
         return new Promise((accept, reject) => {
@@ -32,7 +31,6 @@ module.exports = {
             mealDetailsModel.findOne({id}).exec(function (err, result) {
                 if (err)
                     return reject(err);
-                
                 accept(mongoose.Types.ObjectId(result._id.toString()))
             });
         });
@@ -42,7 +40,6 @@ module.exports = {
             mealDetailsModel.findOne({id}).exec(function (err, result) {
                 if (err)
                     return reject(err);
-
                 accept(result)
             })
         })
