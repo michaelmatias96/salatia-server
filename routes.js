@@ -112,7 +112,7 @@ app.get('/menuDetails', authCheckMiddlware, function (req, res) {
         });
 });
 
-app.post('/removeOrder/', function(req,res) {
+app.post('/removeOrder/',authCheckMiddlware, function(req,res) {
     var orderId = req.body.orderId
 
     db.orders.getOrderById(orderId)
