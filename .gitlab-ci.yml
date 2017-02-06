@@ -24,11 +24,12 @@ deploy-heroku-prod:
 deploy-heroku-integ:
   stage: deploy
   environment: heroku integration
+  when: manual
   script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
     - dpl --provider=heroku --app=salatia-app-api-integ --api-key=$HEROKU_INTEGRATION_API_KEY
-  only:
-    - deployment-heroku-integ
+  except:
+    - deployment-heroku-prod
 
