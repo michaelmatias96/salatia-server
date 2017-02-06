@@ -17,7 +17,7 @@ deploy-heroku-prod:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=hatulia-app-api --api-key=$HEROKU_PRODUCTION_API_KEY
+    - dpl --provider=heroku --app=salatia-app-api --api-key=$HEROKU_PRODUCTION_API_KEY
   only:
     - deployment-heroku-prod
 
@@ -28,7 +28,7 @@ deploy-heroku-integ:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=hatulia-app-api-integ --api-key=$HEROKU_INTEGRATION_API_KEY
+    - dpl --provider=heroku --app=salatia-app-api-integ --api-key=$HEROKU_INTEGRATION_API_KEY
   only:
     - deployment-heroku-integ
 
