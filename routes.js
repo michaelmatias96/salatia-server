@@ -3,7 +3,6 @@ const bodyparser = require('body-parser');
 const db = require("./DALs/db/db");
 const cors = require("cors");
 const express = require("express");
-const moment = require('moment-timezone');
 
 app.use(bodyparser.urlencoded({'extended': 'true'}));// TODO: check if this is needed
 app.use(bodyparser.json());
@@ -27,14 +26,14 @@ app.use(cors({
             ok();
         else if (origin.startsWith("file://"))
             ok();
-        else if (origin.startsWith("https://salatia-app-admin-integ.herokuapp.com"))
-            ok();
         else if (origin == "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop")
             ok();
         else if (origin == "chrome-extension://aicmkgpgakddgnaphhhpliifpcfhicfo")
             ok();
         else
             notAuthorized();
+
+
     }
 }));
 
@@ -42,7 +41,10 @@ var io = require('socket.io').listen(server);
 var newstate;
 
 io.on('connection', function (socket) {
+
     console.log('user connected');
+
+
 
     socket.on('newState', function (data) {
         newstate = data;
@@ -53,22 +55,23 @@ io.on('connection', function (socket) {
 
 
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
-    var auth0Id = request.user.sub;
+    var userId = request.user.sub;
+    console.log(request.user);
+   if(request.user.name!=null) var userName = request.user.name;
+    if(request.user.picture_large!=null) var userPic = request.user.picture_large;
+
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
-    var pickupTime = moment(request.body.pickupTime).toDate();
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
             db.meatDetails.getObjectId(meatId),
-            db.mealDetails.getObjectId(mealId),
-            db.userDetails.getObjectId(auth0Id)
-
+            db.mealDetails.getObjectId(mealId)
         ])
         .then(results => {
-            let [extrasObjectIds, meatObjectId, mealObjectId,userObjectId] = results;
-            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId, pickupTime);
+            let [extrasObjectIds, meatObjectId, mealObjectId] = results;
+            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userId, userName, userPic);
         })
         .then(results => {
             response.send({success : true});
@@ -78,17 +81,6 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         .catch(err => {
             response.send({success: false});
         });
-});
-
-
-app.get('/userLogin', authCheckMiddlware, function(req,res){
-    var userId = req.user.sub;
-    if(req.user.name!=null) var userName = req.user.name;
-    if(req.user.picture_large!=null) var userPic = req.user.picture_large;
-
-    db.userDetails.createUserIfNotExist(userId, userName, userPic)
-        .then(result => res.send({status: "login"}))
-        .catch(err => res.send(err));
 });
 
 app.get('/menuDetails', authCheckMiddlware, function (req, res) {
@@ -120,42 +112,42 @@ app.get('/menuDetails', authCheckMiddlware, function (req, res) {
         });
 });
 
-app.post('/orderDetails', authCheckMiddlware, function (req, res) {
-    var currentOrder = req.body;
+app.post('/removeOrder/',authCheckMiddlware, function(req,res) {
+    var orderId = req.body.orderId
 
-    Promise.all([
-            db.mealDetails.getOne(currentOrder.mealType),
-            db.extrasDetails.getFew(currentOrder.extras),
-            db.meatDetails.getOne(currentOrder.meatType)
-        ])
+    db.orders.getOrderById(orderId)
         .then(results => {
-            let [mealDetails, extrasDetails, meatDetails] = results;
+                    let orderStatus = results[0].status
+                    if (orderStatus == 'new') {
+                        db.orders.removeOrderById(results[0]._id)
+                            .then(result => res.send(result))
+                            .catch(err => res.send(err));
+                    }
 
-            res.send({
-                status: "ok",
-                content: {
-                    mealDetails,
-                    extrasDetails,
-                    meatDetails
-                }
-            });
-        })
-        .catch(err => {
-            res.send({
-                status: "error",
-                content: {
-                    title: "",
-                    message: ""
-                }
-            });
+                    else {
+                        res.send({
+                            status: "error",
+                            content: {
+                                title: "Order Cancellation error",
+                                message: "Could not cancel the specific order - either it is too late or something went wrong :(."
+                            }
+                        })
+                    }
+                })
         });
+
+app.get('/orderDetails', authCheckMiddlware, function (req, res) {
+    var currentOrder = req.body;
+    db.orders.getOrderDetails(currentOrder)
+        .then(result => res.send(result))
+        .catch(err => res.send(err))
 });
 
 app.get('/userOrders', authCheckMiddlware, function(req,res){
-    var auth0Id = req.user.sub;
-        db.orders.getUserOrders(auth0Id)
-            .then(result => res.send(result))
-            .catch(err => res.send(err));
+    var userId = req.user.sub;
+    db.orders.getUserOrders(userId)
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
 });
 
 
@@ -173,7 +165,7 @@ app.post('/changeOrderStatus', function(req,res){
     db.orders.changeStatus(id, orderStatus)
         .then(result => {
             res.send(result);
-            io.emit(config.socketChangeOrderMsg);
+            io.emit('neworder')
         })
         .catch(err => res.send(err));
 });
