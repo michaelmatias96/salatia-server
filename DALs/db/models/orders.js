@@ -36,6 +36,7 @@ module.exports = {
         return new Promise((accept, reject) => {
             ordersModel.find({ $or:[ {'status':'progress'}, {'status':'new'} ]})
                 .sort([['creationTime', 'descending']])
+                .populate('userId')
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
@@ -51,6 +52,7 @@ module.exports = {
         return new Promise((accept, reject) => {
             ordersModel.find({'status': 'finish'})
                 .sort([['creationTime', 'descending']])
+                .populate('userId')
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
