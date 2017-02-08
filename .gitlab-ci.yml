@@ -5,10 +5,23 @@ stages:
   - deploy
 
 
-build:
+build-prod:
   stage: build
   script:
-    - echo Done
+    - echo "module.exports = 'prod';">currentConfig.js
+  artifacts:
+    untracked: true
+  only:
+    - deployment-heroku-prod
+
+build-integ:
+  stage: build
+  script:
+    - echo "module.exports = 'integ';">currentConfig.js
+  artifacts:
+    untracked: true
+  except:
+    - deployment-heroku-prod
 
 deploy-heroku-prod:
   stage: deploy
@@ -17,18 +30,18 @@ deploy-heroku-prod:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=hatulia-app-api --api-key=$HEROKU_PRODUCTION_API_KEY
+    - dpl --skip_cleanup=true --provider=heroku --app=salatia-app-api --api-key=$HEROKU_PRODUCTION_API_KEY
   only:
     - deployment-heroku-prod
 
 deploy-heroku-integ:
   stage: deploy
   environment: heroku integration
+  when: manual
   script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=hatulia-app-api-integ --api-key=$HEROKU_INTEGRATION_API_KEY
-  only:
-    - deployment-heroku-integ
-
+    - dpl --skip_cleanup=true --provider=heroku --app=salatia-app-api-integ --api-key=$HEROKU_INTEGRATION_API_KEY
+  except:
+    - deployment-heroku-prod

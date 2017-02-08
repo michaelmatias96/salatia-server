@@ -2,6 +2,9 @@
  * Created by michaelmatias on 1/14/17.
  */
 const mongoose = require("mongoose");
+const db = require("../../../DALs/db/db");
+
+
 const {Schema} = mongoose;
 
 const ordersSchema = new Schema({
@@ -17,10 +20,12 @@ const ordersSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'extrasdetails'
     }],
-    userId: String,
-    userName: String,
-    userPic: String,
-    status: {type: String, default: "new"},
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'userdetails'
+    },
+    pickupTime: {type: Date},
+    status: {type: String, default: config.newOrderDefaultStatus},
     creationTime: {type: Date, default: Date.now()}
 });
 
@@ -32,6 +37,7 @@ module.exports = {
         return new Promise((accept, reject) => {
             ordersModel.find({ $or:[ {'status':'progress'}, {'status':'new'} ]})
                 .sort([['creationTime', 'descending']])
+                .populate('userId')
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
@@ -59,6 +65,7 @@ module.exports = {
         return new Promise((accept, reject) => {
             ordersModel.find({'status': 'finish'})
                 .sort([['creationTime', 'descending']])
+                .populate('userId')
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
@@ -70,24 +77,32 @@ module.exports = {
                 });
         });
     },
-    getUserOrders(userId) {
+    getUserOrders(auth0Id) {
         return new Promise((accept, reject) => {
-            ordersModel.find({'userId': userId})
-                .sort([['creationTime', 'descending']])
-                .populate('extras', 'displayName imageSrc')
-                .populate('mealId', 'displayName imageSrc')
-                .populate('meatId', 'displayName imageSrc')
-                .exec(function(err, result){
-                    if (err)
-                        return reject(err);
+            db.userDetails.getObjectId(auth0Id)
+                .then(result => {
+                    ordersModel
+                        .find({'userId': result})
+                        .sort([['creationTime', 'descending']])
+                        .populate('extras', 'displayName imageSrc')
+                        .populate('mealId', 'displayName imageSrc')
+                        .populate('meatId', 'displayName imageSrc')
+                        .exec(function(err, result){
+                            if (err) return reject(err);
+                            accept(result);
+                        });
+                })
+                .catch(err => {
+                    return reject(err);
+            })
 
-                    accept(result);
-                });
-        })
+            });
+
     },
     getOrderById(id) {
         return new Promise((accept, reject) => {
             ordersModel.find({'_id': id})
+                .populate('userId')
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
@@ -99,9 +114,9 @@ module.exports = {
                 });
         })
     },
-    createOrder(mealId, meatId, extrasIds, userId, userName, userPic) {
+    createOrder(mealId, meatId, extrasIds, userId, pickupTime) {
         return new Promise((accept, reject) => {
-            var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId,userName: userName, userPic: userPic, creationTime: new Date().toISOString()});
+            var order = new ordersModel({mealId: mealId, meatId: meatId, extras: extrasIds, userId: userId, pickupTime: pickupTime, creationTime: new Date().toISOString()});
             order.save(function(err, result) {
                 if (err)
                     return reject(err);

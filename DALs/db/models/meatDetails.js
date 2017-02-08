@@ -35,5 +35,15 @@ module.exports = {
                 accept(mongoose.Types.ObjectId(result._id.toString()));
             })
         });
+    },
+    getOne(id) {
+        return new Promise((accept, reject) => {
+            meatDetailsModel.findOne({id}).exec(function (err, result) {
+                if (err)
+                    return reject(err);
+
+                accept(result)
+            })
+        })
     }
 };
