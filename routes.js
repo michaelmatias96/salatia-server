@@ -120,6 +120,30 @@ app.get('/menuDetails', authCheckMiddlware, function (req, res) {
         });
 });
 
+app.post('/removeOrder/',authCheckMiddlware, function(req,res) {
+    var orderId = req.body.orderId
+
+    db.orders.getOrderById(orderId)
+        .then(results => {
+                    let orderStatus = results[0].status
+                    if (orderStatus == 'new') {
+                        db.orders.removeOrderById(results[0]._id)
+                            .then(result => res.send(result))
+                            .catch(err => res.send(err));
+                    }
+
+                    else {
+                        res.send({
+                            status: "error",
+                            content: {
+                                title: "Order Cancellation error",
+                                message: "Could not cancel the specific order - either it is too late or something went wrong :(."
+                            }
+                        })
+                    }
+                })
+        });
+
 app.post('/orderDetails', authCheckMiddlware, function (req, res) {
     var currentOrder = req.body;
 
