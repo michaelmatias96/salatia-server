@@ -72,7 +72,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         })
         .then(results => {
             response.send({success : true});
-            io.emit(config.socketNewOrderMsg);
+            io.emit(config.socketNewOrderMsg, {id: results._id});
 
         })
         .catch(err => {
