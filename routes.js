@@ -72,7 +72,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         })
         .then(results => {
             response.send({success : true});
-            io.emit(config.socketNewOrderMsg);
+            io.emit(config.socketNewOrderMsg, {id: results._id});
 
         })
         .catch(err => {
@@ -146,7 +146,6 @@ app.post('/removeOrder/',authCheckMiddlware, function(req,res) {
 
 app.post('/orderDetails', authCheckMiddlware, function (req, res) {
     var currentOrder = req.body;
-
     Promise.all([
             db.mealDetails.getOne(currentOrder.mealType),
             db.extrasDetails.getFew(currentOrder.extras),
