@@ -146,7 +146,6 @@ app.post('/removeOrder/',authCheckMiddlware, function(req,res) {
 
 app.post('/orderDetails', authCheckMiddlware, function (req, res) {
     var currentOrder = req.body;
-
     Promise.all([
             db.mealDetails.getOne(currentOrder.mealType),
             db.extrasDetails.getFew(currentOrder.extras),
