@@ -11,6 +11,8 @@ build-prod:
     - echo "module.exports = 'prod';">currentConfig.js
   artifacts:
     untracked: true
+    paths:
+      - *
   only:
     - deployment-heroku-prod
 
@@ -20,6 +22,8 @@ build-integ:
     - echo "module.exports = 'integ';">currentConfig.js
   artifacts:
     untracked: true
+    paths:
+      - *
   except:
     - deployment-heroku-prod
 
