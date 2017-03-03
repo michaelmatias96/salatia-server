@@ -12,7 +12,7 @@ build-prod:
   artifacts:
     untracked: true
     paths:
-      - *
+      - "*"
   only:
     - deployment-heroku-prod
 
@@ -23,7 +23,7 @@ build-integ:
   artifacts:
     untracked: true
     paths:
-      - *
+      - "*"
   except:
     - deployment-heroku-prod
 
