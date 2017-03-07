@@ -3,7 +3,7 @@
  */
 module.exports = {
     db: {
-        connectionString: "mongodb://localhost/hatuliaDB"
+        connectionString: "mongodb://localhost/salatiaDB"
     },
     cors: {
         mobileApp: "http://localhost:",

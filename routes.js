@@ -4,10 +4,22 @@ const db = require("./DALs/db/db");
 const cors = require("cors");
 const express = require("express");
 const moment = require('moment-timezone');
+const webPush = require('web-push');
+const admin = require("firebase-admin");
+
+
 
 app.use(bodyparser.urlencoded({'extended': 'true'}));// TODO: check if this is needed
 app.use(bodyparser.json());
 app.use(bodyparser.json({type: 'application/vnd.api+json'})); // TODO: check if this is needed
+
+
+var serviceAccount = require("./salatia-app-firebase-adminsdk.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://salatia-app.firebaseio.com"
+});
 
 app.use(cors({
     origin: function(origin, callback) {
@@ -83,13 +95,27 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
 
 app.get('/userLogin', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
+    var endPoint = req.user.endPoint;
     if(req.user.name!=null) var userName = req.user.name;
     if(req.user.picture_large!=null) var userPic = req.user.picture_large;
 
-    db.userDetails.createUserIfNotExist(userId, userName, userPic)
+    db.userDetails.createUserIfNotExist(userId, userName, userPic, endPoint)
         .then(result => res.send({status: "login"}))
         .catch(err => res.send(err));
 });
+
+app.post('/updateUserEndPoint',authCheckMiddlware, function(req,res){
+    var userId = req.user.sub;
+    var endPoint =req.body.endPoint;
+
+    db.userDetails.getAllEndPoints().then(data => console.log(data));
+    db.userDetails.getObjectId(userId).then(objectId => {
+        db.userDetails.updateUserEndPoint(objectId, endPoint)
+            .then(result => res.send({status: "updated"}))
+            .catch(err => res.send(err));
+    });
+});
+
 
 app.get('/menuDetails', authCheckMiddlware, function (req, res) {
     Promise.all([
@@ -190,15 +216,39 @@ app.get('/getOrder/:id', function(req,res){
 });
 
 
-app.post('/changeOrderStatus', function(req,res){
+app.post('/changeOrderStatus', function(req,res) {
     var id = req.body.id;
     var orderStatus = req.body.status;
+    var orderStatusHeb;
+    if(orderStatus == "progress")  orderStatusHeb="בהכנה";
+    if(orderStatus == "finish")  orderStatusHeb="מוכנה";
+
     db.orders.changeStatus(id, orderStatus)
         .then(result => {
             res.send(result);
             io.emit(config.socketChangeOrderMsg);
-        })
-        .catch(err => res.send(err));
+
+            var payload = {
+                notification: {
+                    title: "מצב ההזמנה שלך התעדכן!",
+                    body:  "ההזמנה שלך כעת " + orderStatusHeb,
+                    click_action : "https://salatia-app.herokuapp.com/",
+                    icon: 'assets/icon/Salad-icon.png'
+                }
+            };
+
+            db.userDetails.getEndPointByObjectId(result.userId).then(endpoint => {
+                admin.messaging().sendToDevice(endpoint[0].endPoint, payload)
+                    .then(function (response) {
+                        // See the MessagingDevicesResponse reference documentation for
+                        // the contents of response.
+                        console.log("Successfully sent message:", response);
+                    })
+                    .catch(function (error) {
+                        console.log("Error sending message:", error);
+                    });
+            })
+        });
 });
 
 app.get('/getProgressAndNewOrders', function(req,res){
