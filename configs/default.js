@@ -16,7 +16,7 @@ module.exports = {
         admin: ""
     },
     newOrderDefaultStatus: "new",
-    socketNewOrderMsg: "neworder",
+    socketUpdatesOrdersMsg: "updateorders",
     socketChangeOrderMsg: "changeorder"
 
 };
