@@ -25,8 +25,6 @@ app.use(cors({
             ok();
         else if (origin.startsWith(config.cors.admin))
             ok();
-        else if (origin.startsWith("http://localhost:"))
-            ok();
         else if (origin.startsWith("file://"))
             ok();
         else if (origin.startsWith("https://salatia-app-admin-integ.herokuapp.com"))
