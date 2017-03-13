@@ -81,7 +81,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
 });
 
 
-app.get('/userLogin', authCheckMiddlware, function(req,res){
+app.post('/userLogin', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
     if(req.user.name!=null) var userName = req.user.name;
     if(req.user.picture_large!=null) var userPic = req.user.picture_large;
@@ -91,7 +91,7 @@ app.get('/userLogin', authCheckMiddlware, function(req,res){
         .catch(err => res.send(err));
 });
 
-app.get('/menuDetails', authCheckMiddlware, function (req, res) {
+app.post('/menuDetails', authCheckMiddlware, function (req, res) {
     Promise.all([
             db.mealDetails.getAll(),
             db.extrasDetails.getAll(),
@@ -174,7 +174,7 @@ app.post('/orderDetails', authCheckMiddlware, function (req, res) {
         });
 });
 
-app.get('/userOrders', authCheckMiddlware, function(req,res){
+app.post('/userOrders', authCheckMiddlware, function(req,res){
     var auth0Id = req.user.sub;
         db.orders.getUserOrders(auth0Id)
             .then(result => res.send(result))
