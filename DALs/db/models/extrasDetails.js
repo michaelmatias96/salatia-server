@@ -22,7 +22,7 @@ module.exports = {
                 if (err)
                     return reject(err);
                 accept(data);
-            });
+            }).sort({'isSpecial': 1});
         });
     },
     getObjectIds(ids) {
