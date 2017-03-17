@@ -21,24 +21,40 @@ module.exports = {
             extrasDetailsModel.find({}, function (err, data) {
                 if (err)
                     return reject(err);
-
                 accept(data);
-            });
+            }).sort({'isSpecial': 1});
         });
     },
-    getObjectIds(idList) {
+    getObjectIds(ids) {
         return new Promise((accept, reject) => {
             extrasDetailsModel
-                .find({id: { $in : idList}})
-                .exec(function(err, result) {
+                .find({id: {$in: ids}})
+                .exec(function (err, result) {
                     if (err)
                         return reject(err);
-
                     result = result.map(function (document) {
                         return mongoose.Types.ObjectId(document._id.toString());
                     });
                     accept(result);
                 });
         });
+    },
+    getOne(id) {
+        return new Promise((accept, reject) => {
+            extrasDetailsModel.findOne({id}).exec(function (err, result) {
+                if (err)
+                    return reject(err);
+                accept(result)
+            })
+        })
+    },
+    getFew(ids) {
+        return new Promise((accept, reject) => {
+            extrasDetailsModel.find({ id : { $in : ids }}).exec(function(err, result) {
+                if (err)
+                    return reject(err);
+                accept(result);
+            })
+        })
     }
 };

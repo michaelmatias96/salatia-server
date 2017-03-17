@@ -5,5 +5,9 @@ module.exports = {
     db: {
         connectionString: process.env.MONGODB_URI
     },
-    port: process.env.PORT || 4338
+    port: process.env.PORT || 4338,
+    cors: {
+        mobileApp: "https://salatia-app.herokuapp.com",
+        admin: "https://salatia-app-admin.herokuapp.com"
+    }
 };
