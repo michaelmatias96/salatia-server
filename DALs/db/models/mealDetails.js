@@ -11,7 +11,8 @@ const mealDetailsSchema = new Schema({
     displayName: String,
     comments: String,
     imgUrl: String,
-    price: String
+    price: String,
+    selectionColor: String
 });
 const mealDetailsModel = mongoose.model('mealdetails', mealDetailsSchema);
 
