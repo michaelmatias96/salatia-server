@@ -42,6 +42,9 @@ module.exports = {
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
                 .exec(function(err, result){
+                    let date = new Date();
+                    date = result[0].pickupTime;
+                    result[0].pickupTime.setHours(utc.getHours() + 11);
                 if (err)
                     return reject(err);
 
@@ -70,6 +73,9 @@ module.exports = {
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
                 .exec(function(err, result){
+                    let date = new Date();
+                    date = result[0].pickupTime;
+                    result[0].pickupTime.setHours(utc.getHours() + 11);
                     if (err)
                         return reject(err);
 
@@ -107,6 +113,10 @@ module.exports = {
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
                 .exec(function(err, result){
+                    let date = new Date();
+                    date = result[0].pickupTime;
+                    result[0].pickupTime.setHours(utc.getHours() + 11);
+
                     if (err)
                         return reject(err);
 

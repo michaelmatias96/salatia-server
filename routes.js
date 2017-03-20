@@ -84,7 +84,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         })
         .then(results => {
             response.send({success : true});
-            io.emit(config.socketUpdatesOrdersMsg, {'updateType': 'neworder', 'orderId': results._id});
+            io.emit(config.socketNewOrderMsg, {id: results._id});
 
         })
         .catch(err => {
@@ -93,7 +93,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
 });
 
 
-app.post('/userLogin', authCheckMiddlware, function(req,res){
+app.get('/userLogin', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
     var endPoint = req.user.endPoint;
     if(req.user.name!=null) var userName = req.user.name;
@@ -117,7 +117,7 @@ app.post('/updateUserEndPoint',authCheckMiddlware, function(req,res){
 });
 
 
-app.post('/menuDetails', authCheckMiddlware, function (req, res) {
+app.get('/menuDetails', authCheckMiddlware, function (req, res) {
     Promise.all([
             db.mealDetails.getAll(),
             db.extrasDetails.getAll(),
@@ -154,10 +154,8 @@ app.post('/removeOrder/',authCheckMiddlware, function(req,res) {
                     let orderStatus = results[0].status
                     if (orderStatus == 'new') {
                         db.orders.removeOrderById(results[0]._id)
-                            .then(
-                                result => res.send(result))
+                            .then(result => res.send(result))
                             .catch(err => res.send(err));
-                        io.emit(config.socketUpdatesOrdersMsg, {'updateType' : 'removeorder', 'orderId': orderId});
                     }
 
                     else {
@@ -202,7 +200,7 @@ app.post('/orderDetails', authCheckMiddlware, function (req, res) {
         });
 });
 
-app.post('/userOrders', authCheckMiddlware, function(req,res){
+app.get('/userOrders', authCheckMiddlware, function(req,res){
     var auth0Id = req.user.sub;
         db.orders.getUserOrders(auth0Id)
             .then(result => res.send(result))
