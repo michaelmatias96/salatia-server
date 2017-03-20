@@ -117,7 +117,7 @@ app.post('/updateUserEndPoint',authCheckMiddlware, function(req,res){
 });
 
 
-app.get('/menuDetails', authCheckMiddlware, function (req, res) {
+app.post('/menuDetails', authCheckMiddlware, function (req, res) {
     Promise.all([
             db.mealDetails.getAll(),
             db.extrasDetails.getAll(),
@@ -200,7 +200,7 @@ app.post('/orderDetails', authCheckMiddlware, function (req, res) {
         });
 });
 
-app.get('/userOrders', authCheckMiddlware, function(req,res){
+app.post('/userOrders', authCheckMiddlware, function(req,res){
     var auth0Id = req.user.sub;
         db.orders.getUserOrders(auth0Id)
             .then(result => res.send(result))
