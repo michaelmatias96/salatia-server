@@ -44,7 +44,7 @@ module.exports = {
                 .exec(function(err, result){
                     let date = new Date();
                     date = result[0].pickupTime;
-                    result[0].pickupTime.setHours(utc.getHours() + 11);
+                    result[0].pickupTime.setHours(date.getHours() + 11);
                 if (err)
                     return reject(err);
 
@@ -75,7 +75,7 @@ module.exports = {
                 .exec(function(err, result){
                     let date = new Date();
                     date = result[0].pickupTime;
-                    result[0].pickupTime.setHours(utc.getHours() + 11);
+                    result[0].pickupTime.setHours(date.getHours() + 11);
                     if (err)
                         return reject(err);
 
@@ -115,7 +115,7 @@ module.exports = {
                 .exec(function(err, result){
                     let date = new Date();
                     date = result[0].pickupTime;
-                    result[0].pickupTime.setHours(utc.getHours() + 11);
+                    result[0].pickupTime.setHours(date.getHours() + 11);
 
                     if (err)
                         return reject(err);
