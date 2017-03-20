@@ -10,7 +10,8 @@ const extrasDetailsSchema = new Schema({
     name: String,
     displayName: String,
     comments: String,
-    imgUrl: String
+    imgUrl: String,
+    selectionColor: String
 });
 const extrasDetailsModel = mongoose.model('extrasdetails', extrasDetailsSchema);
 
@@ -22,7 +23,7 @@ module.exports = {
                 if (err)
                     return reject(err);
                 accept(data);
-            });
+            }).sort({'isSpecial': 1});
         });
     },
     getObjectIds(ids) {
