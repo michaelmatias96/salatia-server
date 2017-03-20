@@ -69,7 +69,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
-    var pickupTime = moment.tz(request.body.pickupTime, "Etc/GMT-9").format();
+    var pickupTime = moment(request.body.pickupTime).toDate();
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
@@ -84,7 +84,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
         })
         .then(results => {
             response.send({success : true});
-            io.emit(config.socketNewOrderMsg, {id: results._id});
+            io.emit(config.socketUpdatesOrdersMsg, {'updateType': 'neworder', 'orderId': results._id});
 
         })
         .catch(err => {
@@ -156,6 +156,7 @@ app.post('/removeOrder/',authCheckMiddlware, function(req,res) {
                         db.orders.removeOrderById(results[0]._id)
                             .then(result => res.send(result))
                             .catch(err => res.send(err));
+                        io.emit(config.socketUpdatesOrdersMsg, {'updateType' : 'removeorder', 'orderId': orderId});
                     }
 
                     else {
