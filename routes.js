@@ -93,7 +93,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
 });
 
 
-app.get('/userLogin', authCheckMiddlware, function(req,res){
+app.post('/userLogin', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
     var endPoint = req.user.endPoint;
     if(req.user.name!=null) var userName = req.user.name;
