@@ -69,7 +69,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
     var extrasIds = request.body.extras;
     var meatId = request.body.meatType;
     var mealId = request.body.mealType;
-    var pickupTime = moment(request.body.pickupTime).toDate();
+    var pickupTime = moment.tz(request.body.pickupTime, "Etc/GMT-9").format();
 
     Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
