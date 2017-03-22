@@ -88,6 +88,7 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
 
         })
         .catch(err => {
+            console.error(err != null ? err.stack || err : err);
             response.send({success: false});
         });
 });
