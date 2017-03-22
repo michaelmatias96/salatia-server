@@ -41,11 +41,16 @@ module.exports = {
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
-                .exec(function(err, result){
+                .exec(function(err, results){
+                    let date = new Date();
+                    for (let i=0; i<results.length; ++i) {
+                        date = results[i].pickupTime;
+                        results[i].pickupTime.setHours(date.getHours() + 9);
+                    }
                 if (err)
                     return reject(err);
 
-                accept(result);
+                accept(results);
             });
         });
     },
@@ -55,7 +60,6 @@ module.exports = {
             ordersModel.findOne({id}).exec(function (err, result) {
                 if (err)
                     return reject(err);
-
                 accept(mongoose.Types.ObjectId(result._id.toString()))
             });
         });
@@ -69,11 +73,15 @@ module.exports = {
                 .populate('extras', 'displayName imageSrc')
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
-                .exec(function(err, result){
+                .exec(function(err, results){
+                    let date = new Date();
+                    for (let i=0; i<results.length; ++i) {
+                        date = results[i].pickupTime;
+                        results[i].pickupTime.setHours(date.getHours() + 9);
+                        }
                     if (err)
                         return reject(err);
-
-                    accept(result);
+                    accept(results);
                 });
         });
     },
@@ -107,6 +115,9 @@ module.exports = {
                 .populate('mealId', 'displayName imageSrc')
                 .populate('meatId', 'displayName imageSrc')
                 .exec(function(err, result){
+                    let date = new Date();
+                    date = result[0].pickupTime;
+                    result[0].pickupTime.setHours(date.getHours() + 9);
                     if (err)
                         return reject(err);
 

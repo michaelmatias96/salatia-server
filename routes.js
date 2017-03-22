@@ -154,8 +154,7 @@ app.post('/removeOrder/',authCheckMiddlware, function(req,res) {
                     let orderStatus = results[0].status
                     if (orderStatus == 'new') {
                         db.orders.removeOrderById(results[0]._id)
-                            .then(
-                                result => res.send(result))
+                            .then(result => res.send(result))
                             .catch(err => res.send(err));
                         io.emit(config.socketUpdatesOrdersMsg, {'updateType' : 'removeorder', 'orderId': orderId});
                     }
