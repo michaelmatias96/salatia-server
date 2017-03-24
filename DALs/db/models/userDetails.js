@@ -20,7 +20,12 @@ module.exports = {
     getObjectId(id) {
         return new Promise((accept, reject) => {
             userDetailsModel.findOne({auth0Id: id}).exec(function (err, result) {
-                if (result == null) return reject(null);
+                if (err)
+                    return reject(err);
+
+                if (result == null)
+                    return reject(null);
+
                 accept(mongoose.Types.ObjectId(result._id.toString()))
             });
         });
