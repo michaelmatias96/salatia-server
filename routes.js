@@ -62,37 +62,49 @@ io.on('connection', function (socket) {
     });
 });
 
-
-
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
-    var auth0Id = request.user.sub;
-    var extrasIds = request.body.extras;
-    var meatId = request.body.meatType;
-    var mealId = request.body.mealType;
-    var pickupTime = moment(request.body.pickupTime).toDate();
+    (function submitOrder()
+    {
+        var auth0Id = request.user.sub;
+        var endPoint = request.user.endPoint;
+        let userName, userPic;
+        if (request.user.name != null) userName = request.user.name;
+        if (request.user.picture_large != null) userPic = request.user.picture_large;
+        var extrasIds = request.body.extras;
+        var meatId = request.body.meatType;
+        var mealId = request.body.mealType;
+        var pickupTime = moment(request.body.pickupTime).toDate();
 
-    Promise.all([
+        Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
             db.meatDetails.getObjectId(meatId),
             db.mealDetails.getObjectId(mealId),
             db.userDetails.getObjectId(auth0Id)
 
         ])
-        .then(results => {
-            let [extrasObjectIds, meatObjectId, mealObjectId,userObjectId] = results;
-            return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId, pickupTime);
-        })
-        .then(results => {
-            response.send({success : true});
-            io.emit(config.socketUpdatesOrdersMsg, {'updateType': 'neworder', 'orderId': results._id});
+            .then(results => {
+                let [extrasObjectIds, meatObjectId, mealObjectId,userObjectId] = results;
+                return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId, pickupTime);
+            })
+            .then(results => {
+                response.send({success: true});
+                io.emit(config.socketUpdatesOrdersMsg, {'updateType': 'neworder', 'orderId': results._id});
 
-        })
-        .catch(err => {
-            console.error(err != null ? err.stack || err : err);
-            response.send({success: false});
+            })
+            .catch(err => {
+
+
+                db.userDetails.createUserIfNotExist(auth0Id, userName, userPic, endPoint)
+                    .then(result => {
+                        submitOrder();
+                    })
+                    .catch(err => {
+                        console.error(err != null ? err.stack || err : err);
+                        response.send({success: false});
+                    });
+            });
+    })()
         });
-});
-
 
 app.post('/userLogin', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
@@ -203,12 +215,26 @@ app.post('/orderDetails', authCheckMiddlware, function (req, res) {
 });
 
 app.post('/userOrders', authCheckMiddlware, function(req,res){
-    var auth0Id = req.user.sub;
-        db.orders.getUserOrders(auth0Id)
-            .then(result => res.send(result))
-            .catch(err => res.send(err));
-});
+    let auth0Id = req.user.sub;
+    let endPoint = req.user.endPoint;
+    let userName ,  userPic;
 
+
+    db.orders.getUserOrders(auth0Id)
+            .then(result => res.send(result))
+            .catch(err => {
+                if(req.user.name!=null)  userName = req.user.name;
+                if(req.user.picture_large!=null)  userPic = req.user.picture_large;
+
+                db.userDetails.createUserIfNotExist(auth0Id, userName, userPic, endPoint)
+                    .then(result =>{
+                        db.orders.getUserOrders(auth0Id)
+                            .then(result => res.send(result))
+                            .catch(err => res.send(err));
+                    })
+                    .catch(err => res.send(err));
+            });
+});
 
 app.get('/getOrder/:id', function(req,res){
     var orderId = req.params.id;
