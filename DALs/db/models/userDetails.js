@@ -20,8 +20,7 @@ module.exports = {
     getObjectId(id) {
         return new Promise((accept, reject) => {
             userDetailsModel.findOne({auth0Id: id}).exec(function (err, result) {
-                if (result == null) return reject();
-
+                if (result == null) return reject(null);
                 accept(mongoose.Types.ObjectId(result._id.toString()))
             });
         });
@@ -37,10 +36,9 @@ module.exports = {
 
         return new Promise((accept, reject) => {
             module.exports.getObjectId(id)
-                .then( accept())
                 .catch(err => {
                     user.save(function (err, result) {
-                    accept();
+                    accept(result);
                     });
                 });
         });
