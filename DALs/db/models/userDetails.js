@@ -24,7 +24,7 @@ module.exports = {
                     return reject(err);
 
                 if (result == null)
-                    return reject("User ID was not found in DB");
+                    return reject(null);
 
                 accept(mongoose.Types.ObjectId(result._id.toString()))
             });
@@ -41,10 +41,9 @@ module.exports = {
 
         return new Promise((accept, reject) => {
             module.exports.getObjectId(id)
-                .then( accept())
                 .catch(err => {
                     user.save(function (err, result) {
-                    accept();
+                    accept(result);
                     });
                 });
         });
