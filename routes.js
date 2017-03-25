@@ -91,15 +91,13 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
                 let timer = setInterval(() => {
                     db.orders.getOrderById(results._id)
                         .then(orderObject => {
-                            let orderStatus = orderObject[0].status
-
-                    if (orderStatus == 'new') {
+                    if (orderObject[0].status == 'new') {
                         io.emit(config.socketUpdatesOrdersMsg, {'updateType': 'whatsup', 'orderId': results._id});
-                        console.log("sent!")
                     }
                     else {
                         clearInterval(timer)
                     }})
+                        .catch (err => clearInterval(timer))
                 }, config.timeToNudge)
 
             })
