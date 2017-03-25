@@ -18,6 +18,6 @@ module.exports = {
     newOrderDefaultStatus: "new",
     socketUpdatesOrdersMsg: "updateorders",
     socketChangeOrderMsg: "changeorder",
-    timeToNudge: 15 * 60 * 1000
+    timeToNudge: 1 * 60 * 1000
 
 };
