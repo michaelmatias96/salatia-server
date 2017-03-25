@@ -83,13 +83,30 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
             return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId, pickupTime);
         })
         .then(results => {
-            response.send({success : true});
+            response.send({success: true});
             io.emit(config.socketUpdatesOrdersMsg, {'updateType': 'neworder', 'orderId': results._id});
-
+            return results;
         })
+        .then(results => {
+                let timer = setInterval(() => {
+                    db.orders.getOrderById(results._id)
+                        .then(orderObject => {
+                            let orderStatus = orderObject[0].status
+
+                    if (orderStatus == 'new') {
+                        io.emit(config.socketUpdatesOrdersMsg, {'updateType': 'whatsup', 'orderId': results._id});
+                        console.log("sent!")
+                    }
+                    else {
+                        clearInterval(timer)
+                    }})
+                }, config.timeToNudge)
+
+            })
         .catch(err => {
             response.send({success: false});
         });
+
 });
 
 
@@ -220,15 +237,16 @@ app.get('/getOrder/:id', function(req,res){
 
 app.post('/changeOrderStatus', function(req,res) {
     var id = req.body.id;
-    var orderStatus = req.body.status;
+    var orderNewStatus = req.body.status;
     var orderStatusHeb;
-    if(orderStatus == "progress")  orderStatusHeb="בהכנה";
-    if(orderStatus == "finish")  orderStatusHeb="מוכנה";
+    if(orderNewStatus == "progress")  orderStatusHeb="בהכנה";
+    if(orderNewStatus == "finish")  orderStatusHeb="מוכנה";
 
-    db.orders.changeStatus(id, orderStatus)
+    db.orders.changeStatus(id, orderNewStatus)
         .then(result => {
             res.send(result);
             io.emit(config.socketChangeOrderMsg);
+            orderStatus = orderNewStatus
 
             var payload = {
                 notification: {
