@@ -63,48 +63,48 @@ io.on('connection', function (socket) {
 });
 
 app.post('/submitOrder', authCheckMiddlware, function (request, response) {
-    (function submitOrder()
-    {
-        var auth0Id = request.user.sub;
-        var endPoint = request.user.endPoint;
-        let userName, userPic;
-        if (request.user.name != null) userName = request.user.name;
-        if (request.user.picture_large != null) userPic = request.user.picture_large;
-        var extrasIds = request.body.extras;
-        var meatId = request.body.meatType;
-        var mealId = request.body.mealType;
-        var pickupTime = moment(request.body.pickupTime).toDate();
+    function submitOrder(tries) {
+        let auth0Id = request.user.sub,
+            endPoint = request.user.endPoint,
+            userName = request.user.name,
+            userPic = request.user.picture_large,
+            extrasIds = request.body.extras,
+            meatId = request.body.meatType,
+            mealId = request.body.mealType,
+            pickupTime = moment(request.body.pickupTime).toDate();
 
-        Promise.all([
+        return Promise.all([
             db.extrasDetails.getObjectIds(extrasIds),
             db.meatDetails.getObjectId(meatId),
             db.mealDetails.getObjectId(mealId),
             db.userDetails.getObjectId(auth0Id)
-
         ])
             .then(results => {
-                let [extrasObjectIds, meatObjectId, mealObjectId,userObjectId] = results;
+                let [extrasObjectIds, meatObjectId, mealObjectId, userObjectId] = results;
+                if (userObjectId == null)
+                    return Promise.reject("User ID was not found in DB");
+
                 return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId, pickupTime);
             })
             .then(results => {
                 response.send({success: true});
                 io.emit(config.socketUpdatesOrdersMsg, {'updateType': 'neworder', 'orderId': results._id});
-
             })
             .catch(err => {
-
-
-                db.userDetails.createUserIfNotExist(auth0Id, userName, userPic, endPoint)
-                    .then(result => {
-                        submitOrder();
-                    })
-                    .catch(err => {
-                        console.error(err != null ? err.stack || err : err);
-                        response.send({success: false});
-                    });
+                if (tries <= 0)
+                    return Promise.reject(err);
+                else
+                    return db.userDetails.createUserIfNotExist(auth0Id, userName, userPic, endPoint)
+                        .then(result => submitOrder(tries - 1));
             });
-    })()
+    }
+
+    submitOrder(4)
+        .catch(err => {
+            console.error(err != null ? err.stack || err : err);
+            response.send({success: false});
         });
+});
 
 app.post('/userLogin', authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
@@ -121,12 +121,19 @@ app.post('/updateUserEndPoint',authCheckMiddlware, function(req,res){
     var userId = req.user.sub;
     var endPoint =req.body.endPoint;
 
-    db.userDetails.getAllEndPoints().then(data => console.log(data));
-    db.userDetails.getObjectId(userId).then(objectId => {
-        db.userDetails.updateUserEndPoint(objectId, endPoint)
-            .then(result => res.send({status: "updated"}))
-            .catch(err => res.send(err));
-    });
+    // db.userDetails.getAllEndPoints()
+    //     .then(data => console.log(data));
+
+    db.userDetails.getObjectId(userId)
+        .then(objectId => {
+            if (objectId == null)
+                return Promise.reject();
+
+            return db.userDetails.updateUserEndPoint(objectId, endPoint)
+                .then(result => res.send({status: "updated"}))
+
+        })
+        .catch(err => res.send(err));
 });
 
 

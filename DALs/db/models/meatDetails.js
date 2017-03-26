@@ -33,6 +33,9 @@ module.exports = {
                 if (err)
                     return reject(err);
 
+                if (result == null)
+                    return accept(null);
+
                 accept(mongoose.Types.ObjectId(result._id.toString()));
             })
         });
