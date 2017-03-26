@@ -24,14 +24,14 @@ module.exports = {
                     return reject(err);
 
                 if (result == null)
-                    return reject("User ID was not found in DB");
+                    return accept(null);
 
                 accept(mongoose.Types.ObjectId(result._id.toString()))
             });
         });
     },
     createUserIfNotExist(id, name, imgUrl, endPoint){
-        var user = new userDetailsModel({
+        let user = new userDetailsModel({
             auth0Id: id,
             name: name,
             imgUrl: imgUrl,
@@ -41,12 +41,18 @@ module.exports = {
 
         return new Promise((accept, reject) => {
             module.exports.getObjectId(id)
-                .then( accept())
-                .catch(err => {
+                .then(userId => {
+                    if (userId != null)
+                        return accept();
+
                     user.save(function (err, result) {
-                    accept(result);
+                        if (err != null)
+                            return reject();
+
+                        accept(result);
                     });
-                });
+                })
+                .catch(err => reject(err));
         });
     },
     updateUserEndPoint(id, endPoint){
