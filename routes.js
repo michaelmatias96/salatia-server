@@ -83,8 +83,9 @@ app.post('/submitOrder', authCheckMiddlware, function (request, response) {
             return db.orders.createOrder(mealObjectId, meatObjectId, extrasObjectIds, userObjectId, pickupTime);
         })
         .then(results => {
-            response.send({success: true});
+            response.send({success : true});
             io.emit(config.socketUpdatesOrdersMsg, {'updateType': 'neworder', 'orderId': results._id});
+
             return results;
         })
         .then(results => {
