@@ -60,6 +60,10 @@ module.exports = {
             ordersModel.findOne({id}).exec(function (err, result) {
                 if (err)
                     return reject(err);
+
+                if (result == null)
+                    return accept(null);
+
                 accept(mongoose.Types.ObjectId(result._id.toString()))
             });
         });
@@ -88,9 +92,12 @@ module.exports = {
     getUserOrders(auth0Id) {
         return new Promise((accept, reject) => {
             db.userDetails.getObjectId(auth0Id)
-                .then(result => {
+                .then(userId => {
+                    if (userId == null)
+                        return reject("User ID was not found in DB");
+
                     ordersModel
-                        .find({'userId': result})
+                        .find({'userId': userId})
                         .sort([['creationTime', 'descending']])
                         .populate('extras', 'displayName imageSrc')
                         .populate('mealId', 'displayName imageSrc')

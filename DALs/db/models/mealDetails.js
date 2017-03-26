@@ -32,6 +32,10 @@ module.exports = {
             mealDetailsModel.findOne({id}).exec(function (err, result) {
                 if (err)
                     return reject(err);
+
+                if (result == null)
+                    return accept(null);
+
                 accept(mongoose.Types.ObjectId(result._id.toString()))
             });
         });
