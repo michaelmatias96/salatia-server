@@ -44,7 +44,7 @@ module.exports = {
                 .then( accept())
                 .catch(err => {
                     user.save(function (err, result) {
-                    accept();
+                    accept(result);
                     });
                 });
         });
