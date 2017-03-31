@@ -1,2 +1,5 @@
 runtime: nodejs
 env: flex
+env_variables:
+  MONGODB_URI: 'mongodb://fulladmin:eb9FcdiMwSm@35.187.69.199:27017/admin?readPreference=primary'
+  NODE_ENV: 'prod'
